@@ -1,0 +1,28 @@
+<!doctype html>
+{% load static %}
+<link rel='stylesheet' href="{% static '/css/style.css' %}">
+<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+<html lang='en'>
+<head>
+    <title>FinViz</title>
+</head>
+    <body>
+        <div class='navbar'>
+            <ul>
+                <li><a href = {% url 'search_stock' %}>Search Stock</a></li>
+                <li class='searchbar'>
+                    <form action="{% url 'search_stock' %}" method="POST">
+                        {% csrf_token %}
+                        <input type='search' name='search_stock' placeholder='Search Quote'>
+                        <button type='submit' >Search</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+
+            <br>
+            {% block content%}
+
+            {% endblock %}
+    </body>
+</html>
