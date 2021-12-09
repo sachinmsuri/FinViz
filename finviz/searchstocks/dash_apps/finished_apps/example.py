@@ -83,19 +83,21 @@ def time_series_stock(ticker_dropdown, sector_dropdown):
             x = stock_df['Date'],
             y = stock_df[ticker],
             mode = 'lines',
+            name = ticker,
             textposition = 'bottom center',
         ))
 
     for sector in sector_dropdown:
         df = read_ticker_symbols()
         df = df[df['Sector'] == sector]
-        stock_list = list(df['Symbol'])[0:15]
+        stock_list = list(df['Symbol'])[0:5]
         for stock in stock_list:
             stock_df = obj_iexcloud.get_max_time_series_df(stock)
             graphs.append(go.Scatter(
             x = stock_df['Date'],
             y = stock_df[stock],
             mode = 'lines',
+            name = stock,
             textposition = 'bottom center',
         ))
 
@@ -107,6 +109,29 @@ def time_series_stock(ticker_dropdown, sector_dropdown):
             'layout': go.Layout(
             paper_bgcolor='rgba(30, 30, 30, 30)',
             plot_bgcolor='rgba(30, 30, 30, 30)',
+            autosize=True,
+            xaxis = {'showgrid':True, 
+                'gridwidth':1, 
+                'gridcolor':'White',
+                'color': 'White',
+                'rangeselector': {
+                    'buttons':list([
+                            dict(count=1, label="1m", step="month", stepmode="backward"),
+                            dict(count=6, label="6m", step="month", stepmode="backward"),
+                            dict(count=1, label="YTD", step="year", stepmode="todate"),
+                            dict(count=1, label="1y", step="year", stepmode="backward"),
+                            dict(count=5, label="5y", step="year", stepmode="backward"),
+                            dict(step="all")
+                            ])
+                        }
+                    },
+            yaxis = {'showgrid':True, 
+                'gridwidth':1, 
+                'gridcolor':'White',
+                'color': 'White',
+                    }
                 )
-            }
+        } 
+
+
     return fig
