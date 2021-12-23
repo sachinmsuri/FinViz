@@ -7,7 +7,7 @@ class iexCloud():
     def __init__(self):
         self.base_url = "https://cloud.iexapis.com"
         try:
-            #f = open('iexcloud_keys.json') --> for testing the module
+            #f = open('iexcloud_keys.json') #--> for testing the module
             f = open('iexcloud/iexcloud_keys.json',)
             key = json.load(f)
             self.token = key['key']
@@ -46,8 +46,40 @@ class iexCloud():
         r = self.get_request(f'/stable/stock/market/collection/country?collectionName={country_code}')
         return r
 
+    def get_financials(self, ticker):
+        #/stock/{symbol}/stats/
+        r = self.get_request(f'/stable/stock/{ticker}/financials')
+        if not r:
+            return
+        else:
+            for i in r['financials']:
+                data_dict = {
+                    'Symbol': ticker, 
+                    'EBITDA': i['EBITDA'],
+                    'Revenue': i['revenue'],
+                    'Net Income': i['netIncome'],
+                }
+
+        return data_dict
+
+    def get_stats(self, ticker):
+        r = self.get_request(f'/stable/stock/{ticker}/stats')
+        #for i in r:
+        if not r:
+            return
+        else:
+            data_dict = {
+                'Symbol': ticker,
+                'Market Capitalization': r['marketcap'],
+                'Dividend': r['dividendYield'],
+                'PE Ratio': r['peRatio'],
+            }
+
+        return data_dict
+
+
+
 if __name__ == "__main__":
-    ticker = ['sachin', 'suri']
-    if any(isinstance(i, list) for i in ticker):
-        ticker = [item for elem in ticker for item in elem]
-    print(ticker)
+    obj = iexCloud()
+    r = obj.get_stats('AAPL')
+    print(r)

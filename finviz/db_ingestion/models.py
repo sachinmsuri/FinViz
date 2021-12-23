@@ -15,3 +15,5 @@ class Tickers(models.Model):
         """
         return DataFrame.from_records(Tickers.objects.all().values())
 
+class Tickerstats(models.Model):
+    symbol = models.CharField(max_length=500)

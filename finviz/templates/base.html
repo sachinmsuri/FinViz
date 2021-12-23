@@ -9,13 +9,15 @@
     <body>
         <div class='navbar'>
             <ul>
-                <li><a href = {% url 'search_stock' %}>Search Stock</a></li>
-                <li class='searchbar'>
+                <li><a href = {% url 'search_stock' %}>The Market</a></li>
+                <li><a href = {% url 'search_stock' %}>Portfolios</a></li>
+                <li><a href = {% url 'search_stock' %}>Momentum Trading</a></li>
+                <!-- <li class='searchbar'>
+                    {% csrf_token %}
                     <form action="{% url 'search_stock' %}" method="POST">
-                        {% csrf_token %}
                         <input type='search' name='search_stock' placeholder='Search Quote'>
                         <button type='submit' >Search</button>
-                    </form>
+                    </form>  -->
                 </li>
             </ul>
         </div>

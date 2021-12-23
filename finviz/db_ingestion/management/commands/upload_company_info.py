@@ -14,11 +14,12 @@ class Command(BaseCommand):
             df = df[df['Sector'].notna()]
             df[~df['Symbol'].str.contains("^")]
             df = df[df['Country'] == 'United States']
-            df = df[['Symbol', 'Name', 'Sector', 'Market Cap', 'Volume']]
+            df = df[['Symbol', 'Name', 'Sector', 'Volume']]
 
             #Upload data
             #engine = create_engine('sqlite:///db.sqlite3')
             engine = create_engine(engine_string)
             df.to_sql(Tickers._meta.db_table, con=engine, index=False, if_exists='replace')
+            print('Nasdaq company information uploaded to database')
         except Exception as e:
             print(str(e))

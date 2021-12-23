@@ -16,11 +16,24 @@ from django_plotly_dash import DjangoDash
 #Parameters and instantiating classes
 obj_iexcloud = iexCloud()
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = DjangoDash('example', external_stylesheets=external_stylesheets)
+app = DjangoDash('searchstocks', external_stylesheets=external_stylesheets)
 
 def read_ticker_symbols():
     try:
-        df = pd.read_sql('SELECT * FROM db_ingestion_tickers;', engine_string)
+        df_tickers = pd.read_sql('SELECT * FROM db_ingestion_tickers;', engine_string)
+        df_tickerstats = pd.read_sql('SELECT * FROM db_ingestion_tickerstats', engine_string)
+        df = pd.merge(df_tickers, df_tickerstats, how='inner', on='Symbol')
+
+        #Format Market Capitalisation
+        df['Market Capitalization Ranges'] = 'Placeholder'
+        df.loc[(df['Market Capitalization'] < 0), 'Market Capitalization Ranges'] = 'Less than $0'
+        df.loc[(df['Market Capitalization'] >= 0) & (df['Market Capitalization'] <= 500000000), 'Market Capitalization Ranges'] = '$0 - $500,000,000'
+        df.loc[(df['Market Capitalization'] >= 500000000) & (df['Market Capitalization'] <= 1000000000), 'Market Capitalization Ranges'] = '$500,000,000 - $1,000,000,000'
+        df.loc[(df['Market Capitalization'] >= 1000000000) & (df['Market Capitalization'] <= 10000000000), 'Market Capitalization Ranges'] = '$1,000,000,000 - $10,000,000,000'
+        df.loc[(df['Market Capitalization'] >= 1000000000) & (df['Market Capitalization'] <= 50000000000), 'Market Capitalization Ranges'] = '$10,000,000,000 - $50,000,000,000'
+        df.loc[(df['Market Capitalization'] >= 5000000000) & (df['Market Capitalization'] <= 100000000000), 'Market Capitalization Ranges'] = '$50,000,000,000 - $100,000,000,000'
+        df.loc[(df['Market Capitalization'] >= 100000000000), 'Market Capitalization Ranges'] = 'Greater than $100,000,000,000'
+
         return df
     except Exception as e:
         print(str(e))
@@ -39,8 +52,16 @@ def get_sectors():
     for i in sector_lst:
         dropdown_options.append({'label':i, 'value':i})
     return dropdown_options
-##############################################################################################
 
+def dropdown_values(column_name):
+    dropdown_options = []
+    df = read_ticker_symbols()
+    lst = list(df[column_name].unique())
+    for i in lst:
+        dropdown_options.append({'label':i, 'value':i})
+    return dropdown_options
+
+##############################################################################################
 
 #App layout
 app.layout = html.Div([
@@ -49,7 +70,7 @@ app.layout = html.Div([
                 multi=True,
                 value = [],
                 clearable = True,
-                placeholder="Companies listed of Nasdaq",
+                placeholder="Companies listed on Nasdaq",
                 style={'backgroundColor': '#1E1E1E'}),
     
     dcc.Dropdown(id='sectorselector',
@@ -57,10 +78,27 @@ app.layout = html.Div([
                 multi=True,
                 clearable = True,
                 value = [],
-                placeholder="Sectors listed of Nasdaq",
+                placeholder="Sectors listed on Nasdaq",
                 style={'backgroundColor': '#1E1E1E'}),
 
     dcc.Graph(id="time-series-chart", config={'displayModeBar': False}),
+
+    html.Br(),
+
+    dcc.Dropdown(id='Market Cap',
+                options=[
+                    {'label': 'Less than $0', 'value': 'Less than $0'},
+                    {'label': '$500,000,000 - $1,000,000,000', 'value': '$500,000,000 - $1,000,000,000'},
+                    {'label': '$1,000,000,000 - $10,000,000,000', 'value': '$1,000,000,000 - $10,000,000,000'},
+                    {'label': '$10,000,000,000 - $50,000,000,000', 'value': '$10,000,000,000 - $50,000,000,000'},
+                    {'label': '$50,000,000,000 - $100,000,000,000', 'value': '$50,000,000,000 - $100,000,000,000'}
+                ],
+                multi=True,
+                clearable = True,
+                value = [],
+                placeholder="Filter by Revenue",
+                searchable=False,
+                style={'backgroundColor': '#1E1E1E'}),
 ])
 
 #Callbacks
@@ -90,7 +128,7 @@ def time_series_stock(ticker_dropdown, sector_dropdown):
     for sector in sector_dropdown:
         df = read_ticker_symbols()
         df = df[df['Sector'] == sector]
-        stock_list = list(df['Symbol'])[0:5]
+        stock_list = list(df['Symbol'])[0:10]
         for stock in stock_list:
             stock_df = obj_iexcloud.get_max_time_series_df(stock)
             graphs.append(go.Scatter(
@@ -112,7 +150,7 @@ def time_series_stock(ticker_dropdown, sector_dropdown):
             autosize=True,
             xaxis = {'showgrid':True, 
                 'gridwidth':1, 
-                'gridcolor':'White',
+                'gridcolor':'Grey',
                 'color': 'White',
                 'rangeselector': {
                     'buttons':list([
@@ -127,7 +165,7 @@ def time_series_stock(ticker_dropdown, sector_dropdown):
                     },
             yaxis = {'showgrid':True, 
                 'gridwidth':1, 
-                'gridcolor':'White',
+                'gridcolor':'Grey',
                 'color': 'White',
                     }
                 )
