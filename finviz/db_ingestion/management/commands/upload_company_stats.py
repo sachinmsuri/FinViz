@@ -17,7 +17,7 @@ class Command(BaseCommand):
             tickers_df = pd.read_sql('SELECT Symbol FROM db_ingestion_tickers;', engine_string)
             tickers = tickers_df['Symbol'].to_list()
             tickers = random.choices(tickers, k=200)
-            #print(tickers)        
+            print(tickers)   
 
             for ticker in tickers:
                 print(f"Fetching data for {ticker}")
