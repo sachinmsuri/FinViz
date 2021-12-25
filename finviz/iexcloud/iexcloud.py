@@ -24,18 +24,20 @@ class iexCloud():
             print(f"connection to api failed ... error code - {r.status_code}")
 
     def get_max_time_series(self, ticker):
-        r = self.get_request(f'/stable/stock/{ticker}/chart/max')
+        #r = self.get_request(f'/stable/stock/{ticker}/chart/max')
+        r = self.get_request(f'/stable/stock/{ticker}/chart/1y')
         return r
 
     def get_max_time_series_df(self, ticker):
-        r = self.get_request(f'/stable/stock/{ticker}/chart/max')
+        #r = self.get_request(f'/stable/stock/{ticker}/chart/max')
+        r = self.get_request(f'/stable/stock/{ticker}/chart/1y')
         data_lst = []
 
         for i in r:
             data_lst.append([i['date'], i['close']])
 
         df = pd.DataFrame(data_lst, columns=['Date', ticker])
-        print(df)
+        print(f"Fetching time series data for {ticker}")
         return df
 
     def get_quote(self, ticker):

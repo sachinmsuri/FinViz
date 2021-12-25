@@ -12,12 +12,14 @@
                 <li><a href = {% url 'search_stock' %}>The Market</a></li>
                 <li><a href = {% url 'search_stock' %}>Portfolios</a></li>
                 <li><a href = {% url 'search_stock' %}>Momentum Trading</a></li>
-                <!-- <li class='searchbar'>
-                    {% csrf_token %}
+                <li><a href = {% url 'search_stock' %}>Top Movers</a></li>
+                <li><a href = {% url 'search_stock' %}>Stock Forcasts</a></li></li>
+                <li class='searchbar'><a href = {% url 'search_stock' %}>FinViz Beta</a></li>
+                    <!--{% csrf_token %}
                     <form action="{% url 'search_stock' %}" method="POST">
                         <input type='search' name='search_stock' placeholder='Search Quote'>
                         <button type='submit' >Search</button>
-                    </form>  -->
+                    </form> -->
                 </li>
             </ul>
         </div>
