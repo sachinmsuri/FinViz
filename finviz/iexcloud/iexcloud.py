@@ -25,12 +25,12 @@ class iexCloud():
 
     def get_max_time_series(self, ticker):
         #r = self.get_request(f'/stable/stock/{ticker}/chart/max')
-        r = self.get_request(f'/stable/stock/{ticker}/chart/1y')
+        r = self.get_request(f'/stable/stock/{ticker}/chart/5y')
         return r
 
     def get_max_time_series_df(self, ticker):
         #r = self.get_request(f'/stable/stock/{ticker}/chart/max')
-        r = self.get_request(f'/stable/stock/{ticker}/chart/1y')
+        r = self.get_request(f'/stable/stock/{ticker}/chart/5y')
         data_lst = []
 
         for i in r:

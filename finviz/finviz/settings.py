@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'channels', 
     'channels_redis',
     'searchstocks',
-    'db_ingestion'
+    'db_ingestion',
+    'portfolios',
 ]
 
 MIDDLEWARE = [
