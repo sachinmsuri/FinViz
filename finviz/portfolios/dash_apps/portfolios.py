@@ -48,6 +48,56 @@ app.layout = html.Div([
                 clearable = True,
                 placeholder="Add Stocks to Portfolio 1",
                 style={'backgroundColor': '#1E1E1E'}),
+    dcc.Dropdown(id='portfolio_2',
+                options=get_symbols(),
+                multi=True,
+                value = [],
+                clearable = True,
+                placeholder="Add Stocks to Portfolio 2",
+                style={'backgroundColor': '#1E1E1E'}),
+    dcc.Dropdown(id='portfolio_3',
+                options=get_symbols(),
+                multi=True,
+                value = [],
+                clearable = True,
+                placeholder="Add Stocks to Portfolio 3",
+                style={'backgroundColor': '#1E1E1E'}),
+    dcc.Dropdown(id='portfolio_4',
+                options=get_symbols(),
+                multi=True,
+                value = [],
+                clearable = True,
+                placeholder="Add Stocks to Portfolio 4",
+                style={'backgroundColor': '#1E1E1E'}),
+    dcc.Dropdown(id='portfolio_5',
+                options=get_symbols(),
+                multi=True,
+                value = [],
+                clearable = True,
+                placeholder="Add Stocks to Portfolio 5",
+                style={'backgroundColor': '#1E1E1E'}),
+    dcc.Dropdown(id='portfolio_6',
+                options=get_symbols(),
+                multi=True,
+                value = [],
+                clearable = True,
+                placeholder="Add Stocks to Portfolio 6",
+                style={'backgroundColor': '#1E1E1E'}),
+    dcc.Dropdown(id='portfolio_7',
+                options=get_symbols(),
+                multi=True,
+                value = [],
+                clearable = True,
+                placeholder="Add Stocks to Portfolio 7",
+                style={'backgroundColor': '#1E1E1E'}),
+    dcc.Dropdown(id='portfolio_8',
+                options=get_symbols(),
+                multi=True,
+                value = [],
+                clearable = True,
+                placeholder="Add Stocks to Portfolio 8",
+                style={'backgroundColor': '#1E1E1E'}),
+    
 
     html.Br(),
 
@@ -64,7 +114,6 @@ app.layout = html.Div([
 
     html.Br(),
     html.Br(),
-    html.Br(),
 
     dcc.Graph(id="time-series-chart", config={'displayModeBar': False}),
 
@@ -76,9 +125,18 @@ app.layout = html.Div([
     Output("time-series-chart", "figure"), 
     Input("button", 'n_clicks'),
     State("portfolio_1", "value"),
+    State("portfolio_2", "value"),
+    State("portfolio_3", "value"),
+    State("portfolio_4", "value"),
+    State("portfolio_5", "value"),
+    State("portfolio_6", "value"),
+    State("portfolio_7", "value"),
+    State("portfolio_8", "value"),
     )
 
-def time_series_stock(n_clicks, portfolio_1):
+def time_series_stock(n_clicks, portfolio_1, portfolio_2, portfolio_3, 
+                        portfolio_4, portfolio_5, portfolio_6,
+                        portfolio_7, portfolio_8):
     #Flatten list
     graphs = []
 
@@ -119,7 +177,14 @@ def time_series_stock(n_clicks, portfolio_1):
         #    ticker_dropdown = [item for elem in portfolio_1 for item in elem]
     if n_clicks > 0:
         user_inputs = {
-            'Portfolio 1': portfolio_1
+            'Portfolio 1': portfolio_1,
+            'Portfolio 2': portfolio_2,
+            'Portfolio 3': portfolio_3,
+            'Portfolio 4': portfolio_4,
+            'Portfolio 5': portfolio_5,
+            'Portfolio 6': portfolio_6,
+            'Portfolio 7': portfolio_7,
+            'Portfolio 8': portfolio_8,
             }
         filled_user_inputs = {}
         #graphs = []
@@ -146,7 +211,7 @@ def time_series_stock(n_clicks, portfolio_1):
             x = portfolio_df['Date'],
             y = portfolio_df['Average Price'],
             mode = 'lines',
-            name = 'Average Price',
+            name = f"{key} - Average Price",
             textposition = 'bottom center',
             ))
 
