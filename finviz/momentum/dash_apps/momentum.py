@@ -11,12 +11,14 @@ from dash.dependencies import Output
 import plotly.express as px
 import plotly.graph_objs as go
 from django_plotly_dash import DjangoDash
+from plotly.subplots import make_subplots
+
 
 ##############################################################################################
 #Parameters and instantiating classes
 obj_iexcloud = iexCloud()
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = DjangoDash('searchstocks', external_stylesheets=external_stylesheets)
+app = DjangoDash('momentum', external_stylesheets=external_stylesheets)
 
 def read_ticker_symbols():
     try:
@@ -129,6 +131,21 @@ app.layout = html.Div([
                 style={'backgroundColor': '#1E1E1E'}),
     
     html.Br(),
+
+    dcc.Checklist(
+            id = 'momentum_selector',
+            options=[
+                {'label': 'View Share Price', 'value': 'View Share Price'},
+            ],
+            value=[],
+            style = {
+                    'display':'flex', 
+                    'justifyContent':'center',
+                    'align-items':'center',
+                    'margin': 'auto',
+                    'color': 'white',
+                    }
+            ),
 
     dcc.Graph(id="time-series-chart", config={'displayModeBar': False}),
 
@@ -243,11 +260,12 @@ app.layout = html.Div([
     Input("dividend_selector", "value"),
     Input("pe_selector", "value"),
     Input("revenue_selector", "value"),
-    Input("ebitda_selector", "value")])
+    Input("ebitda_selector", "value"),
+    Input("momentum_selector", "value")])
 
 def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_dropdown, 
                         dividend_selector, pe_selector, revenue_selector,
-                        ebitda_selector):
+                        ebitda_selector, momentum_selector):
     #Flatten list
     if any(isinstance(i, list) for i in ticker_dropdown):
         ticker_dropdown = [item for elem in ticker_dropdown for item in elem]
@@ -256,14 +274,32 @@ def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_dropdown,
 
     #Draw time series of a single stock
     for ticker in ticker_dropdown:
-        stock_df = obj_iexcloud.get_max_time_series_df(ticker)
+        #stock_df = obj_iexcloud.get_max_time_series_df(ticker)
+        stock_df = obj_iexcloud.get_momentum_df(ticker)
+        # graphs.append(go.Scatter(
+        #     x = stock_df['Date'],
+        #     y = stock_df['Momentum Change'],
+        #     mode = 'lines',
+        #     name = f"{ticker} Momentum Change" ,
+        #     textposition = 'bottom center',
+        # ))
         graphs.append(go.Scatter(
             x = stock_df['Date'],
-            y = stock_df[ticker],
+            y = stock_df['Momentum'],
             mode = 'lines',
-            name = ticker,
+            name = f"{ticker} Momentum" ,
             textposition = 'bottom center',
         ))
+        if momentum_selector:
+            graphs.append(go.Scatter(
+                x = stock_df['Date'],
+                y = stock_df[ticker],
+                mode = 'lines',
+                name = f"{ticker} Share Price",
+                textposition = 'bottom center',
+                yaxis = 'y2'
+            ))
+
 
     parameters = {
         'Market Capitalization Ranges': marketcap_dropdown,
@@ -287,18 +323,28 @@ def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_dropdown,
         sector_df = sector_df.loc[(sector_df[key].isin(filled_parameters[key]))]
     stock_list = list(sector_df['Symbol'])[0:20]
     for stock in stock_list:
-        stock_df = obj_iexcloud.get_max_time_series_df(stock)
+        stock_df = obj_iexcloud.get_momentum_df(stock)
         graphs.append(go.Scatter(
-        x = stock_df['Date'],
-        y = stock_df[stock],
-        mode = 'lines',
-        name = stock,
-        textposition = 'bottom center',
-    ))
+            x = stock_df['Date'],
+            y = stock_df['Momentum'],
+            mode = 'lines',
+            name = f"{stock} Momentum",
+            textposition = 'bottom center',
+        ))
+        if momentum_selector:
+            graphs.append(go.Scatter(
+            x = stock_df['Date'],
+            y = stock_df[stock],
+            mode = 'lines',
+            name = f"{stock} Share Price",
+            textposition = 'bottom center',
+            yaxis = 'y2'
+        ))
 
 
     if any(isinstance(i, list) for i in graphs):
         graphs = [item for elem in graphs for item in elem]
+
 
     fig = {
             'data': graphs,
@@ -325,7 +371,14 @@ def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_dropdown,
                 'gridwidth':1, 
                 'gridcolor':'Grey',
                 'color': 'White',
-                    }
+                    },
+            yaxis2 = {'showgrid':False, 
+                'gridwidth':1, 
+                'gridcolor':'Grey',
+                'color': 'White',
+                'overlaying': 'y',
+                'side': 'right'
+                    },
                 )
         } 
 

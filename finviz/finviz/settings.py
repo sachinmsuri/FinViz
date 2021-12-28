@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'searchstocks',
     'db_ingestion',
     'portfolios',
+    'momentum',
 ]
 
 MIDDLEWARE = [

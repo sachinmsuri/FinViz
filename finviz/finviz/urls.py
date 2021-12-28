@@ -21,5 +21,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('searchstocks.urls')),
     path('', include('portfolios.urls')),
+    path('', include('momentum.urls')),
     path('django_plotly_dash/', include('django_plotly_dash.urls')),
 ]
+
+

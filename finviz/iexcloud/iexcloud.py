@@ -8,8 +8,8 @@ class iexCloud():
     def __init__(self):
         self.base_url = "https://cloud.iexapis.com"
         try:
-            f = open('iexcloud_keys.json') #--> for testing the module
-            #f = open('iexcloud/iexcloud_keys.json',)
+            #f = open('iexcloud_keys.json') #--> for testing the module
+            f = open('iexcloud/iexcloud_keys.json',)
             key = json.load(f)
             self.token = key['key']
             f.close()
@@ -26,12 +26,12 @@ class iexCloud():
 
     def get_max_time_series(self, ticker):
         #r = self.get_request(f'/stable/stock/{ticker}/chart/max')
-        r = self.get_request(f'/stable/stock/{ticker}/chart/5y')
+        r = self.get_request(f'/stable/stock/{ticker}/chart/1y')
         return r
 
     def get_max_time_series_df(self, ticker):
         #r = self.get_request(f'/stable/stock/{ticker}/chart/max')
-        r = self.get_request(f'/stable/stock/{ticker}/chart/5y')
+        r = self.get_request(f'/stable/stock/{ticker}/chart/1y')
         data_lst = []
 
         for i in r:
@@ -65,9 +65,17 @@ class iexCloud():
         
         time_series_df = time_series_df[time_series_df['Momentum'] != placeholder]
         time_series_df['Momentum'] = time_series_df['Momentum'].astype(float)
+
+        dataframe_length = (len(time_series_df)-1)
+        time_series_df['Momentum Change'] = placeholder
+
+        for i in range(dataframe_length, 0, -1):
+            time_series_df.iloc[(i), time_series_df.columns.get_loc('Momentum Change')] = ((time_series_df.iloc[i, time_series_df.columns.get_loc('Momentum')] - time_series_df.iloc[(i-1), time_series_df.columns.get_loc('Momentum')]))
         
-        print(time_series_df.to_string())
-        print(time_series_df.dtypes)
+        time_series_df = time_series_df[time_series_df['Momentum Change'] != placeholder]
+        time_series_df['Momentum Change'] = time_series_df['Momentum Change'].astype(float)
+
+        return time_series_df
 
     def get_financials(self, ticker):
         #/stock/{symbol}/stats/
@@ -105,3 +113,4 @@ class iexCloud():
 if __name__ == "__main__":
     obj = iexCloud()
     r = obj.get_momentum_df('AAPL')
+
