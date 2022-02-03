@@ -2,7 +2,7 @@ from iexcloud.iexcloud import iexCloud
 from parameters import engine_string
 from db_ingestion.models import Tickers
 import pandas as pd
-import dash
+#import dash
 from dash import dcc
 from dash import html
 import dash_bootstrap_components as dbc
@@ -26,14 +26,14 @@ def read_ticker_symbols():
         
         #Format Market Capitalisation
         df['Market Capitalization Ranges'] = 'Placeholder'
-        df.loc[(df['Market Capitalization'] <= 250000000), 'Market Capitalization Ranges'] = '$0 - $250,000,000'
-        df.loc[(df['Market Capitalization'] >= 250000000) & (df['Market Capitalization'] <= 500000000), 'Market Capitalization Ranges'] = '$250,000,000 - $500,000,000'
-        df.loc[(df['Market Capitalization'] >= 500000000) & (df['Market Capitalization'] <= 1000000000), 'Market Capitalization Ranges'] = '$500,000,000 - $1,000,000,000'
-        df.loc[(df['Market Capitalization'] >= 1000000000) & (df['Market Capitalization'] <= 10000000000), 'Market Capitalization Ranges'] = '$1,000,000,000 - $10,000,000,000'
-        df.loc[(df['Market Capitalization'] >= 1000000000) & (df['Market Capitalization'] <= 50000000000), 'Market Capitalization Ranges'] = '$10,000,000,000 - $50,000,000,000'
-        df.loc[(df['Market Capitalization'] >= 5000000000) & (df['Market Capitalization'] <= 100000000000), 'Market Capitalization Ranges'] = '$50,000,000,000 - $100,000,000,000'
-        df.loc[(df['Market Capitalization'] >= 100000000000) & (df['Market Capitalization'] <= 500000000000), 'Market Capitalization Ranges'] = '$100,000,000,000 - 500,000,000,000'
-        df.loc[(df['Market Capitalization'] >= 500000000000), 'Market Capitalization Ranges'] = 'Greater than $500,000,000,000'
+        df.loc[(df['Market Capitalization'] <= 250000000), 'Market Capitalization Ranges'] = '$0 - $250m'
+        df.loc[(df['Market Capitalization'] >= 250000000) & (df['Market Capitalization'] <= 500000000), 'Market Capitalization Ranges'] = '$250m - $500m'
+        df.loc[(df['Market Capitalization'] >= 500000000) & (df['Market Capitalization'] <= 1000000000), 'Market Capitalization Ranges'] = '$500m - $1,000m'
+        df.loc[(df['Market Capitalization'] >= 1000000000) & (df['Market Capitalization'] <= 10000000000), 'Market Capitalization Ranges'] = '$1,000m - $10,000m'
+        df.loc[(df['Market Capitalization'] >= 1000000000) & (df['Market Capitalization'] <= 50000000000), 'Market Capitalization Ranges'] = '$10,000m - $50,000m'
+        df.loc[(df['Market Capitalization'] >= 5000000000) & (df['Market Capitalization'] <= 100000000000), 'Market Capitalization Ranges'] = '$50,000m - $100,000m'
+        df.loc[(df['Market Capitalization'] >= 100000000000) & (df['Market Capitalization'] <= 500000000000), 'Market Capitalization Ranges'] = '$100,000m - $500,000m'
+        df.loc[(df['Market Capitalization'] >= 500000000000), 'Market Capitalization Ranges'] = 'Greater than $500,000m'
 
         #Format Dividend
         df['Dividend Ranges'] = 'Placeholder'
@@ -130,26 +130,41 @@ app.layout = html.Div([
     
     html.Br(),
 
+    # dcc.Checklist(
+    #         id = 'moving_average_selector',
+    #         options=[
+    #             {'label': 'Moving Average', 'value': 'Moving Average'},
+    #         ],
+    #         value=[],
+    #         style = {
+    #                 'display':'flex', 
+    #                 'justifyContent':'center',
+    #                 'align-items':'center',
+    #                 'margin': 'auto',
+    #                 'color': 'white',
+    #                 }
+    #         ),
+
     dcc.Graph(id="time-series-chart", config={'displayModeBar': False}),
 
     html.Br(),
 
     dcc.Dropdown(id='marketcap_selector',
                 options=[
-                    {'label': '$0 - $250,000,000', 'value': '$0 - $250,000,000'},
-                    {'label': '$250,000,000 - $500,000,000', 'value': '$250,000,000 - $500,000,000'},
-                    {'label': '$500,000,000 - $1,000,000,000', 'value': '$500,000,000 - $1,000,000,000'},
-                    {'label': '$1,000,000,000 - $10,000,000,000', 'value': '$1,000,000,000 - $10,000,000,000'},
-                    {'label': '$10,000,000,000 - $50,000,000,000', 'value': '$10,000,000,000 - $50,000,000,000'},
-                    {'label': '$50,000,000,000 - $100,000,000,000', 'value': '$50,000,000,000 - $100,000,000,000'},
-                    {'label': '$100,000,000,000 - $500,000,000,000', 'value': '$100,000,000,000 - $500,000,000,000'},        
-                    {'label': 'Greater than $500,000,000,000', 'value': 'Greater than $500,000,000,000'}
+                    {'label': "0 - $250Millon", 'value': "0 - $250 millon"},
+                    {'label': "$250Million - $500Million", 'value': "$250Million - $500Million"},
+                    {'label': "$500Million - $1Billion", 'value': "$500Million - $1Billion"},
+                    {'label': '$1Billion - $10Billion', 'value': '$1Billion - $10Billion'},
+                    {'label': '$10Billion - $50Billion', 'value': '$10Billion - $50Billion'},
+                    {'label': '$50Billion - $100Billion', 'value': '$50Billion - $100Billion'},
+                    {'label': '$100Billion - $500Billion', 'value': '$100Billion - $500Billion'},        
+                    {'label': 'Over $500Billion ', 'value': 'Over $500Billion'},
                 ],
                 multi=True,
                 clearable = True,
                 value = [],
                 placeholder="Filter Sectors by Market Capitalization",
-                searchable=False,
+                searchable=True,
                 style={'backgroundColor': '#1E1E1E'}),
 
     html.Br(),
@@ -245,7 +260,7 @@ app.layout = html.Div([
     Input("revenue_selector", "value"),
     Input("ebitda_selector", "value")])
 
-def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_dropdown, 
+def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_selector, 
                         dividend_selector, pe_selector, revenue_selector,
                         ebitda_selector):
     #Flatten list
@@ -266,7 +281,7 @@ def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_dropdown,
         ))
 
     parameters = {
-        'Market Capitalization Ranges': marketcap_dropdown,
+        'Market Capitalization Ranges': marketcap_selector,
         'Dividend Ranges': dividend_selector,
         'PE Ratio Ranges': pe_selector,
         'Revenue Ranges': revenue_selector,

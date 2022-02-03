@@ -132,12 +132,13 @@ app.layout = html.Div([
     
     html.Br(),
 
-    dcc.Checklist(
+    dcc.RadioItems(
             id = 'momentum_selector',
             options=[
-                {'label': 'View Share Price', 'value': 'View Share Price'},
+                {'label': 'Momentum', 'value': 'Momentum'},
+                {'label': 'Moving Average', 'value': 'Moving Average'},
             ],
-            value=[],
+            value='Momentum',
             style = {
                     'display':'flex', 
                     'justifyContent':'center',
@@ -266,6 +267,7 @@ app.layout = html.Div([
 def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_dropdown, 
                         dividend_selector, pe_selector, revenue_selector,
                         ebitda_selector, momentum_selector):
+    print(momentum_selector)
     #Flatten list
     if any(isinstance(i, list) for i in ticker_dropdown):
         ticker_dropdown = [item for elem in ticker_dropdown for item in elem]
@@ -275,7 +277,6 @@ def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_dropdown,
     #Draw time series of a single stock
     for ticker in ticker_dropdown:
         #stock_df = obj_iexcloud.get_max_time_series_df(ticker)
-        stock_df = obj_iexcloud.get_momentum_df(ticker)
         # graphs.append(go.Scatter(
         #     x = stock_df['Date'],
         #     y = stock_df['Momentum Change'],
@@ -283,19 +284,22 @@ def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_dropdown,
         #     name = f"{ticker} Momentum Change" ,
         #     textposition = 'bottom center',
         # ))
-        graphs.append(go.Scatter(
-            x = stock_df['Date'],
-            y = stock_df['Momentum'],
-            mode = 'lines',
-            name = f"{ticker} Momentum" ,
-            textposition = 'bottom center',
-        ))
-        if momentum_selector:
+        if momentum_selector == 'Momentum':
+            stock_df = obj_iexcloud.get_momentum_df(ticker)
             graphs.append(go.Scatter(
                 x = stock_df['Date'],
-                y = stock_df[ticker],
+                y = stock_df['Momentum'],
                 mode = 'lines',
-                name = f"{ticker} Share Price",
+                name = f"{ticker} Momentum" ,
+                textposition = 'bottom center',
+            ))
+        if momentum_selector == 'Moving Average':
+            stock_df = obj_iexcloud.get_moving_average_df(ticker)
+            graphs.append(go.Scatter(
+                x = stock_df['Date'],
+                y = stock_df['Moving Average'],
+                mode = 'lines',
+                name = f"{ticker} Moving Average",
                 textposition = 'bottom center',
                 yaxis = 'y2'
             ))
@@ -323,20 +327,22 @@ def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_dropdown,
         sector_df = sector_df.loc[(sector_df[key].isin(filled_parameters[key]))]
     stock_list = list(sector_df['Symbol'])[0:20]
     for stock in stock_list:
-        stock_df = obj_iexcloud.get_momentum_df(stock)
-        graphs.append(go.Scatter(
-            x = stock_df['Date'],
-            y = stock_df['Momentum'],
-            mode = 'lines',
-            name = f"{stock} Momentum",
-            textposition = 'bottom center',
-        ))
-        if momentum_selector:
+        if momentum_selector == 'Momentum':
+            stock_df = obj_iexcloud.get_momentum_df(stock)
+            graphs.append(go.Scatter(
+                x = stock_df['Date'],
+                y = stock_df['Momentum'],
+                mode = 'lines',
+                name = f"{stock} Momentum",
+                textposition = 'bottom center',
+            ))
+        if momentum_selector == 'Moving Average':
+            stock_df = obj_iexcloud.get_moving_average_df(ticker)
             graphs.append(go.Scatter(
             x = stock_df['Date'],
-            y = stock_df[stock],
+            y = stock_df['Moving Average'],
             mode = 'lines',
-            name = f"{stock} Share Price",
+            name = f"{stock} Moving Average",
             textposition = 'bottom center',
             yaxis = 'y2'
         ))

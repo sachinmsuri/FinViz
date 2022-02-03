@@ -31,7 +31,7 @@ class iexCloud():
 
     def get_max_time_series_df(self, ticker):
         #r = self.get_request(f'/stable/stock/{ticker}/chart/max')
-        r = self.get_request(f'/stable/stock/{ticker}/chart/1y')
+        r = self.get_request(f'/stable/stock/{ticker}/chart/5y')
         data_lst = []
 
         for i in r:
@@ -76,6 +76,16 @@ class iexCloud():
         time_series_df['Momentum Change'] = time_series_df['Momentum Change'].astype(float)
 
         return time_series_df
+
+    def get_moving_average_df(self, ticker):
+        time_period = 912
+        time_series_df = self.get_max_time_series_df(ticker)
+
+        time_series_df['Moving Average'] = time_series_df[ticker].rolling(time_period).mean()
+        print(time_series_df)
+
+        return time_series_df
+
 
     def get_financials(self, ticker):
         #/stock/{symbol}/stats/
