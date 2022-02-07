@@ -26,19 +26,20 @@ def read_ticker_symbols():
         
         #Format Market Capitalisation
         df['Market Capitalization Ranges'] = 'Placeholder'
-        df.loc[(df['Market Capitalization'] <= 250000000), 'Market Capitalization Ranges'] = '$0 - $250m'
-        df.loc[(df['Market Capitalization'] >= 250000000) & (df['Market Capitalization'] <= 500000000), 'Market Capitalization Ranges'] = '$250m - $500m'
-        df.loc[(df['Market Capitalization'] >= 500000000) & (df['Market Capitalization'] <= 1000000000), 'Market Capitalization Ranges'] = '$500m - $1,000m'
-        df.loc[(df['Market Capitalization'] >= 1000000000) & (df['Market Capitalization'] <= 10000000000), 'Market Capitalization Ranges'] = '$1,000m - $10,000m'
-        df.loc[(df['Market Capitalization'] >= 1000000000) & (df['Market Capitalization'] <= 50000000000), 'Market Capitalization Ranges'] = '$10,000m - $50,000m'
-        df.loc[(df['Market Capitalization'] >= 5000000000) & (df['Market Capitalization'] <= 100000000000), 'Market Capitalization Ranges'] = '$50,000m - $100,000m'
-        df.loc[(df['Market Capitalization'] >= 100000000000) & (df['Market Capitalization'] <= 500000000000), 'Market Capitalization Ranges'] = '$100,000m - $500,000m'
-        df.loc[(df['Market Capitalization'] >= 500000000000), 'Market Capitalization Ranges'] = 'Greater than $500,000m'
+        df.loc[(df['Market Capitalization'] <= 250000000), 'Market Capitalization Ranges'] = '$0 - $250Million'
+        df.loc[(df['Market Capitalization'] >= 250000000) & (df['Market Capitalization'] <= 500000000), 'Market Capitalization Ranges'] = '$250Million - $500Million'
+        df.loc[(df['Market Capitalization'] >= 500000000) & (df['Market Capitalization'] <= 1000000000), 'Market Capitalization Ranges'] = '$500Million - $1Billion'
+        df.loc[(df['Market Capitalization'] >= 1000000000) & (df['Market Capitalization'] <= 10000000000), 'Market Capitalization Ranges'] = '$1Billion - $10Billion'
+        df.loc[(df['Market Capitalization'] >= 1000000000) & (df['Market Capitalization'] <= 50000000000), 'Market Capitalization Ranges'] = '$10Billion - $50Billion'
+        df.loc[(df['Market Capitalization'] >= 5000000000) & (df['Market Capitalization'] <= 100000000000), 'Market Capitalization Ranges'] = '$50Billion - $100Billion'
+        df.loc[(df['Market Capitalization'] >= 100000000000) & (df['Market Capitalization'] <= 500000000000), 'Market Capitalization Ranges'] = '$100Billion - $500Billion'
+        df.loc[(df['Market Capitalization'] >= 500000000000), 'Market Capitalization Ranges'] = 'Greater than $500Billion'
 
         #Format Dividend
         df['Dividend Ranges'] = 'Placeholder'
         df.loc[(df['Dividend'] <= 0), 'Dividend Ranges'] = '0%'
-        df.loc[(df['Dividend'] >= 0) & (df['Dividend'] <= 0.025), 'Dividend Ranges'] = '0% - 2.5%'
+        df.loc[(df['Dividend'] >= 0) & (df['Dividend'] <= 0.01), 'Dividend Ranges'] = '0% - 1%'
+        df.loc[(df['Dividend'] >= 0.01) & (df['Dividend'] <= 0.025), 'Dividend Ranges'] = '1% - 2.5%'
         df.loc[(df['Dividend'] >= 0.025) & (df['Dividend'] <= 0.05), 'Dividend Ranges'] = '2.5% - 5%'
         df.loc[(df['Dividend'] >= 0.05) & (df['Dividend'] <= 0.075), 'Dividend Ranges'] = '5% - 7.5%'
         df.loc[(df['Dividend'] >= 0.075) & (df['Dividend'] <= 0.1), 'Dividend Ranges'] = '7.5% - 10%'
@@ -61,25 +62,25 @@ def read_ticker_symbols():
 
         #Format Revenue
         df['Revenue Ranges'] = 'Placeholder'
-        df.loc[(df['Revenue'] <= 250000000), 'Revenue Ranges'] = '$0 - $250,000,000'
-        df.loc[(df['Revenue'] >= 250000000) & (df['Revenue'] <= 500000000), 'Revenue Ranges'] = '$250,000,000 - $500,000,000'
-        df.loc[(df['Revenue'] >= 500000000) & (df['Revenue'] <= 1000000000), 'Revenue Ranges'] = '$500,000,000 - $1,000,000,000'
-        df.loc[(df['Revenue'] >= 1000000000) & (df['Revenue'] <= 10000000000), 'Revenue Ranges'] = '$1,000,000,000 - $10,000,000,000'
-        df.loc[(df['Revenue'] >= 10000000000) & (df['Revenue'] <= 50000000000), 'Revenue Ranges'] = '$10,000,000,000 - $50,000,000,000'
-        df.loc[(df['Revenue'] >= 50000000000) & (df['Revenue'] <= 100000000000), 'Revenue Ranges'] = '$50,000,000,000 - $100,000,000,000'
-        df.loc[(df['Revenue'] >= 100000000000), 'Revenue Ranges'] = 'Greater than $100,000,000,000'
+        df.loc[(df['Revenue'] <= 250000000), 'Revenue Ranges'] = '$0 - $250Million'
+        df.loc[(df['Revenue'] >= 250000000) & (df['Revenue'] <= 500000000), 'Revenue Ranges'] = '$250Million - $500Million'
+        df.loc[(df['Revenue'] >= 500000000) & (df['Revenue'] <= 1000000000), 'Revenue Ranges'] = '$500Millionn- $1Billion'
+        df.loc[(df['Revenue'] >= 1000000000) & (df['Revenue'] <= 10000000000), 'Revenue Ranges'] = '$1Billion - $10Billion'
+        df.loc[(df['Revenue'] >= 10000000000) & (df['Revenue'] <= 50000000000), 'Revenue Ranges'] = '$10Billion - $50Billion'
+        df.loc[(df['Revenue'] >= 50000000000) & (df['Revenue'] <= 100000000000), 'Revenue Ranges'] = '$50Billion - $100Billion'
+        df.loc[(df['Revenue'] >= 100000000000), 'Revenue Ranges'] = 'Greater than $100Billion'
         #243,198,000
 
         #Format EBITDA
         df['EBITDA Ranges'] = 'Placeholder'
-        df.loc[(df['EBITDA'] < -100000000), 'EBITDA Ranges'] = 'Less than -$100,000,000'
-        df.loc[(df['EBITDA'] < -100000000) & (df['EBITDA'] <= -50000000), 'EBITDA Ranges'] = '-$100,000,000 - -$50,000,000'
-        df.loc[(df['EBITDA'] >= -50000000) & (df['EBITDA'] <= 0), 'EBITDA Ranges'] = '-$50,000,000 - $0'
-        df.loc[(df['EBITDA'] >= 0) & (df['EBITDA'] <= 250000000), 'EBITDA Ranges'] = '$0 - $250,000,000'
-        df.loc[(df['EBITDA'] >= 250000000) & (df['EBITDA'] <= 500000000), 'EBITDA Ranges'] = '$250,000,000 - $500,000,000'
-        df.loc[(df['EBITDA'] >= 500000000) & (df['EBITDA'] <= 1000000000), 'EBITDA Ranges'] = '$500,000,000 - $1,000,000,000'
-        df.loc[(df['EBITDA'] >= 1000000000) & (df['EBITDA'] <= 10000000000), 'EBITDA Ranges'] = '$1,000,000,000 - $10,000,000,000'
-        df.loc[(df['EBITDA'] >= 10000000000), 'EBITDA Ranges'] = 'Greater than $10,000,000,000'
+        df.loc[(df['EBITDA'] < -100000000), 'EBITDA Ranges'] = 'Less than -$100Million'
+        df.loc[(df['EBITDA'] < -100000000) & (df['EBITDA'] <= -50000000), 'EBITDA Ranges'] = '-$100Million- -$50Million'
+        df.loc[(df['EBITDA'] >= -50000000) & (df['EBITDA'] <= 0), 'EBITDA Ranges'] = '-$50Million - $0'
+        df.loc[(df['EBITDA'] >= 0) & (df['EBITDA'] <= 250000000), 'EBITDA Ranges'] = '$0 - $250Million'
+        df.loc[(df['EBITDA'] >= 250000000) & (df['EBITDA'] <= 500000000), 'EBITDA Ranges'] = '$250Million - $500Million'
+        df.loc[(df['EBITDA'] >= 500000000) & (df['EBITDA'] <= 1000000000), 'EBITDA Ranges'] = '$500Million - $1Billion'
+        df.loc[(df['EBITDA'] >= 1000000000) & (df['EBITDA'] <= 10000000000), 'EBITDA Ranges'] = '$1Billion - $10Billion'
+        df.loc[(df['EBITDA'] >= 10000000000), 'EBITDA Ranges'] = 'Greater than $10Billion'
 
         return df
     except Exception as e:
@@ -151,7 +152,7 @@ app.layout = html.Div([
 
     dcc.Dropdown(id='marketcap_selector',
                 options=[
-                    {'label': "0 - $250Millon", 'value': "0 - $250 millon"},
+                    {'label': "0 - $250Millon", 'value': "0 - $250Million"},
                     {'label': "$250Million - $500Million", 'value': "$250Million - $500Million"},
                     {'label': "$500Million - $1Billion", 'value': "$500Million - $1Billion"},
                     {'label': '$1Billion - $10Billion', 'value': '$1Billion - $10Billion'},
@@ -171,7 +172,8 @@ app.layout = html.Div([
 
     dcc.Dropdown(id='dividend_selector',
                 options=[
-                    {'label': '0% - 2.5%', 'value': '0% - 2.5%'},
+                    {'label': '0% - 1%', 'value': '0% - 1%'},
+                    {'label': '1% - 2.5%', 'value': '1% - 2.5%'},
                     {'label': '2.5% - 5%', 'value': '2.5% - 5%'},
                     {'label': '5% - 7.5%', 'value': '5% - 7.5%'},
                     {'label': '7.5% - 10%', 'value': '7.5% - 10%'},
@@ -213,13 +215,13 @@ app.layout = html.Div([
 
     dcc.Dropdown(id='revenue_selector',
                 options=[
-                    {'label': '$0 - $250,000,000', 'value': '$0 - $250,000,000'},
-                    {'label': '$250,000,000 - $500,000,000', 'value': '$250,000,000 - $500,000,000'},
-                    {'label': '$500,000,000 - $1,000,000,000', 'value': '$500,000,000 - $1,000,000,000'},
-                    {'label': '$1,000,000,000 - $10,000,000,000', 'value': '$1,000,000,000 - $10,000,000,000'},
-                    {'label': '$10,000,000,000 - $50,000,000,000', 'value': '$10,000,000,000 - $50,000,000,000'},
-                    {'label': '$50,000,000,000 - $100,000,000,000', 'value': '$50,000,000,000 - $100,000,000,000'},
-                    {'label': 'Greater than $100,000,000,000', 'value': 'Greater than $100,000,000,000'},
+                    {'label': '$0 - $250Million', 'value': '$0 - $250Million'},
+                    {'label': '$250Million - $500Million', 'value': '$250Million - $500Million'},
+                    {'label': '$500Million - $1Billion', 'value': '$500Million - $1Billion'},
+                    {'label': '$1Billion - $10Billion', 'value': '$1Billion - $10Billion'},
+                    {'label': '$10BBillion - $50Billion', 'value': '$10Billion - $50Billion'},
+                    {'label': '$50Billion - $100Billion', 'value': '$50Billion - $100Billion'},
+                    {'label': 'Greater than $100Billion', 'value': 'Greater than $100Billion'},
                 ],
                 multi=True,
                 clearable = True,
@@ -232,14 +234,14 @@ app.layout = html.Div([
 
     dcc.Dropdown(id='ebitda_selector',
                 options=[
-                    {'label': 'Less than -$100,000,000', 'value': 'Less than -$100,000,000'},
-                    {'label': '-$100,000,000 - -$50,000,000', 'value': '-$100,000,000 - -$50,000,000'},
-                    {'label': '-$50,000,000 - $0', 'value': '-$50,000,000 - $0'},
-                    {'label': '$0 - $250,000,000', 'value': '$0 - $250,000,000'},
-                    {'label': '$250,000,000 - $500,000,000', 'value': '$250,000,000 - $500,000,000'},
-                    {'label': '$500,000,000 - $1,000,000,000', 'value': '$500,000,000 - $1,000,000,000'},
-                    {'label': '$1,000,000,000 - $10,000,000,000', 'value': '$1,000,000,000 - $10,000,000,000'},
-                    {'label': 'Greater than $10,000,000,000', 'value': 'Greater than $10,000,000,000'},
+                    {'label': 'Less than -$100Million', 'value': 'Less than -$100Million'},
+                    {'label': '-$100Million - -$50Million', 'value': '-$100Million - -$50Million'},
+                    {'label': '-$50Million - $0', 'value': '-$50Million - $0'},
+                    {'label': '$0 - $250Million', 'value': '$0 - $250Million'},
+                    {'label': '$250Million - $500Million', 'value': '$250Million - $500Million'},
+                    {'label': '$500Million - $1Billion', 'value': '$500Million - $1Billion'},
+                    {'label': '$1Billion - $10Billion', 'value': '$1Billion - $10Billion'},
+                    {'label': 'Greater than $10Billion', 'value': 'Greater than $10Billion'},
                 ],
                 multi=True,
                 clearable = True,
@@ -247,6 +249,8 @@ app.layout = html.Div([
                 placeholder="Filter Sectors by Earnings (EBITDA)",
                 searchable=False,
                 style={'backgroundColor': '#1E1E1E'}),
+    
+    html.Br(),
 ])
 
 #Callbacks
@@ -258,11 +262,13 @@ app.layout = html.Div([
     Input("dividend_selector", "value"),
     Input("pe_selector", "value"),
     Input("revenue_selector", "value"),
-    Input("ebitda_selector", "value")])
+    Input("ebitda_selector", "value")]
+    )
 
 def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_selector, 
                         dividend_selector, pe_selector, revenue_selector,
                         ebitda_selector):
+
     #Flatten list
     if any(isinstance(i, list) for i in ticker_dropdown):
         ticker_dropdown = [item for elem in ticker_dropdown for item in elem]
@@ -300,7 +306,7 @@ def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_selector,
     for key in  filled_parameters:
         #sector_df = sector_df.loc[(sector_df['Market Capitalization Ranges'].isin(marketcap_dropdown))]
         sector_df = sector_df.loc[(sector_df[key].isin(filled_parameters[key]))]
-    stock_list = list(sector_df['Symbol'])[0:20]
+    stock_list = list(sector_df['Symbol'])
     for stock in stock_list:
         stock_df = obj_iexcloud.get_max_time_series_df(stock)
         graphs.append(go.Scatter(
@@ -321,6 +327,7 @@ def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_selector,
             paper_bgcolor='rgba(30, 30, 30, 30)',
             plot_bgcolor='rgba(30, 30, 30, 30)',
             autosize=True,
+            height = 550,
             xaxis = {'showgrid':True, 
                 'gridwidth':1, 
                 'gridcolor':'Grey',
@@ -340,9 +347,13 @@ def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_selector,
                 'gridwidth':1, 
                 'gridcolor':'Grey',
                 'color': 'White',
-                    }
+                    },
+            legend=dict(
+                font=dict(
+                    color="white"
+                    ),
                 )
+            )
         } 
-
 
     return fig

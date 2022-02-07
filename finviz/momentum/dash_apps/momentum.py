@@ -337,7 +337,7 @@ def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_dropdown,
                 textposition = 'bottom center',
             ))
         if momentum_selector == 'Moving Average':
-            stock_df = obj_iexcloud.get_moving_average_df(ticker)
+            stock_df = obj_iexcloud.get_moving_average_df(stock)
             graphs.append(go.Scatter(
             x = stock_df['Date'],
             y = stock_df['Moving Average'],
@@ -385,7 +385,12 @@ def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_dropdown,
                 'overlaying': 'y',
                 'side': 'right'
                     },
+            legend=dict(
+                font=dict(
+                    color="white"
+                    ),
                 )
+            )
         } 
 
 

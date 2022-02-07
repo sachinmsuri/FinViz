@@ -146,6 +146,7 @@ def time_series_stock(n_clicks, portfolio_1, portfolio_2, portfolio_3,
             paper_bgcolor='rgba(30, 30, 30, 30)',
             plot_bgcolor='rgba(30, 30, 30, 30)',
             autosize=True,
+            height = 550,
             xaxis = {'showgrid':True, 
                 'gridwidth':1, 
                 'gridcolor':'Grey',
@@ -165,7 +166,12 @@ def time_series_stock(n_clicks, portfolio_1, portfolio_2, portfolio_3,
                 'gridwidth':1, 
                 'gridcolor':'Grey',
                 'color': 'White',
-                    }
+                    },
+            legend=dict(
+                font=dict(
+                    color="white"
+                    ),
+                )
                 )
         } 
 
