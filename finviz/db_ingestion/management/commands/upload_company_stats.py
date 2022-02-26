@@ -16,7 +16,7 @@ class Command(BaseCommand):
             obj = iexCloud()
             tickers_df = pd.read_sql('SELECT Symbol FROM db_ingestion_tickers;', engine_string)
             tickers = tickers_df['Symbol'].to_list()
-            #tickers = random.choices(tickers, k=200)
+            tickers = random.choices(tickers, k=100)
             #For testing
             #tickers.extend(['NVDA', 'MSFT', 'AAPL'])
             tickers = list(dict.fromkeys(tickers))

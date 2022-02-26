@@ -251,6 +251,9 @@ app.layout = html.Div([
                 style={'backgroundColor': '#1E1E1E'}),
     
     html.Br(),
+
+    dcc.Graph(id="value-finder", config={'displayModeBar': False}),
+
 ])
 
 #Callbacks
@@ -357,3 +360,68 @@ def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_selector,
         } 
 
     return fig
+
+
+
+@app.callback(
+    Output("value-finder", "figure"), 
+    [Input("stockselector", "value"),
+    Input("sectorselector", "value")]
+    #Input("marketcap_selector", "value"),
+    #Input("dividend_selector", "value"),
+    #Input("pe_selector", "value"),
+    #Input("revenue_selector", "value"),
+    #Input("ebitda_selector", "value")]
+    )
+
+def value_finder(ticker_dropdown, sector_dropdown):
+
+    #Flatten list
+    if any(isinstance(i, list) for i in ticker_dropdown):
+        ticker_dropdown = [item for elem in ticker_dropdown for item in elem]
+
+    value_finder_df = read_ticker_symbols()
+    value_finder_df['value'] = ((value_finder_df['Share Price'] -
+                                value_finder_df['200 Day MA']) / value_finder_df['Share Price']) * 100
+    
+    value_finder_df = value_finder_df[value_finder_df['Symbol'].isin(ticker_dropdown)]
+
+    fig = px.bar(value_finder_df, x="Symbol", y="value", 
+                color="Symbol")
+
+
+    if sector_dropdown:
+        if any(isinstance(i, list) for i in sector_dropdown):
+            sector_dropdown = [item for elem in sector_dropdown for item in elem]
+
+        value_finder_df = read_ticker_symbols()
+        value_finder_df['value'] = ((value_finder_df['Share Price'] -
+                                    value_finder_df['200 Day MA']) / value_finder_df['Share Price']) * 100
+        
+        value_finder_df = value_finder_df[value_finder_df['Sector'].isin(sector_dropdown)]
+
+        fig = px.bar(value_finder_df, x="Symbol", y="value", 
+                    color="Symbol")
+
+        
+    fig.update_layout(autosize=True, 
+                    height=450, 
+                    paper_bgcolor='rgba(30, 30, 30, 30)',
+                    plot_bgcolor='rgba(30, 30, 30, 30)',
+                    xaxis = {'showgrid':True, 
+                            'gridwidth':1, 
+                            'gridcolor':'Grey',
+                            'color': 'White'},
+                    yaxis = {'showgrid':True, 
+                            'gridwidth':1, 
+                            'gridcolor':'Grey',
+                            'color': 'White'},
+                    legend=dict(
+                    font=dict(
+                        color="white"
+                    ),
+                )
+            )
+    
+    return fig
+    

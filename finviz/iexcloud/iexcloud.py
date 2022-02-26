@@ -104,16 +104,18 @@ class iexCloud():
         return data_dict
 
     def get_stats(self, ticker):
-        r = self.get_request(f'/stable/stock/{ticker}/stats')
-        #for i in r:
-        if not r:
+        stats = self.get_request(f'/stable/stock/{ticker}/stats')
+        latest_share_price = self.get_request(f'/stable/stock/{ticker}/delayed-quote')
+        if not stats or not latest_share_price:
             return
         else:
             data_dict = {
                 'Symbol': ticker,
-                'Market Capitalization': r['marketcap'],
-                'Dividend': r['dividendYield'],
-                'PE Ratio': r['peRatio'],
+                'Market Capitalization': stats['marketcap'],
+                'Dividend': stats['dividendYield'],
+                'PE Ratio': stats['peRatio'],
+                '200 Day MA': stats['day200MovingAvg'],
+                'Share Price': latest_share_price['delayedPrice']
             }
 
         return data_dict
