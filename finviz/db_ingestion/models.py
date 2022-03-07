@@ -17,3 +17,7 @@ class Tickers(models.Model):
 
 class Tickerstats(models.Model):
     symbol = models.CharField(max_length=500)
+
+class Marketcap_colormaps(models.Model):
+    symbol = models.CharField(max_length=500)
+
