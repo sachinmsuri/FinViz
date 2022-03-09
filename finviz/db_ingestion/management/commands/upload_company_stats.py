@@ -17,8 +17,8 @@ class Command(BaseCommand):
             tickers_df = pd.read_sql('SELECT Symbol FROM db_ingestion_tickers;', engine_string)
             tickers = tickers_df['Symbol'].to_list()
             #For testing
-            tickers = random.choices(tickers, k=100)
-            tickers.extend(['NVDA', 'MSFT', 'AAPL'])
+            #tickers = random.choices(tickers, k=100)
+            #tickers.extend(['NVDA', 'MSFT', 'AAPL'])
             tickers = list(dict.fromkeys(tickers))
             print(tickers)   
 

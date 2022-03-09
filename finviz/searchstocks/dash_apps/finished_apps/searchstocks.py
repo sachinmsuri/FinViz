@@ -141,6 +141,16 @@ def stock_information(ticker, metric):
     return range
 
 
+def get_company_stats():
+    try:
+        df = pd.read_sql(f'SELECT * FROM db_ingestion_tickerstats', engine_string)
+    except Exception as e:
+        print(str(e))
+
+    return df
+
+
+
 ##############################################################################################
 
 #App layout
@@ -446,9 +456,15 @@ def value_finder(ticker_dropdown, sector_dropdown):
                                     value_finder_df['200 Day MA']) / value_finder_df['Share Price']) * 100
         
         value_finder_df = value_finder_df[value_finder_df['Sector'].isin(sector_dropdown)]
+        #df_metrics = get_company_stats()
 
-        fig = px.bar(value_finder_df, x="Symbol", y="value", 
-                    color="Symbol")
+        #value_finder_df = pd.merge(value_finder_df, df_metrics[['Symbol', 'PE Ratio Ranges']], how='left', on='Symbol')
+
+        fig = px.bar(value_finder_df, 
+                    x="Symbol", 
+                    y="value", 
+                    color="PE Ratio Ranges",
+                    )
 
         
     fig.update_layout(autosize=True, 
