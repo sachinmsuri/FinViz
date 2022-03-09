@@ -21,3 +21,17 @@ class Tickerstats(models.Model):
 class Marketcap_colormaps(models.Model):
     symbol = models.CharField(max_length=500)
 
+class Dividend_colormaps(models.Model):
+    symbol = models.CharField(max_length=500)
+
+class Peratio_colormaps(models.Model):
+    symbol = models.CharField(max_length=500)
+
+class Revenue_colormaps(models.Model):
+    symbol = models.CharField(max_length=500)
+
+class Ebitda_colormaps(models.Model):
+    symbol = models.CharField(max_length=500)
+
+
+

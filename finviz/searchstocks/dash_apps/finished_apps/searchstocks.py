@@ -126,6 +126,15 @@ def stock_information(ticker, metric):
 
     if metric == 'marketcap':
         updated_metric = 'Market Capitalization Ranges'
+    if metric == 'dividend':
+        updated_metric = 'Dividend Ranges'
+    if metric == 'ebitda':
+        updated_metric = 'EBITDA Ranges'
+    if metric == 'peratio':
+        updated_metric = 'PE Ratio Ranges'
+    if metric == 'revenue':
+        updated_metric = 'Revenue Ranges'
+
 
     range = df_tickerstats[updated_metric].iloc[0]
 

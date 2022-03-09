@@ -17,8 +17,8 @@ class Command(BaseCommand):
             tickers_df = pd.read_sql('SELECT Symbol FROM db_ingestion_tickers;', engine_string)
             tickers = tickers_df['Symbol'].to_list()
             #For testing
-            #tickers = random.choices(tickers, k=100)
-            #tickers.extend(['NVDA', 'MSFT', 'AAPL'])
+            tickers = random.choices(tickers, k=100)
+            tickers.extend(['NVDA', 'MSFT', 'AAPL'])
             tickers = list(dict.fromkeys(tickers))
             print(tickers)   
 
@@ -77,7 +77,7 @@ class Command(BaseCommand):
             df['Revenue Ranges'] = 'Placeholder'
             df.loc[(df['Revenue'] <= 250000000), 'Revenue Ranges'] = '$0 - $250Million'
             df.loc[(df['Revenue'] >= 250000000) & (df['Revenue'] <= 500000000), 'Revenue Ranges'] = '$250Million - $500Million'
-            df.loc[(df['Revenue'] >= 500000000) & (df['Revenue'] <= 1000000000), 'Revenue Ranges'] = '$500Millionn- $1Billion'
+            df.loc[(df['Revenue'] >= 500000000) & (df['Revenue'] <= 1000000000), 'Revenue Ranges'] = '$500Million- $1Billion'
             df.loc[(df['Revenue'] >= 1000000000) & (df['Revenue'] <= 10000000000), 'Revenue Ranges'] = '$1Billion - $10Billion'
             df.loc[(df['Revenue'] >= 10000000000) & (df['Revenue'] <= 50000000000), 'Revenue Ranges'] = '$10Billion - $50Billion'
             df.loc[(df['Revenue'] >= 50000000000) & (df['Revenue'] <= 100000000000), 'Revenue Ranges'] = '$50Billion - $100Billion'
