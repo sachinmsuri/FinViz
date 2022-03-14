@@ -1,0 +1,47 @@
+.container {
+    color: white;
+}
+
+.stocksearchgraph canvas {
+    width:1250px !important;
+    height:500px !important;
+    margin: auto;
+    width: 50%;
+    border: 3px solid green;
+    padding: 10px;
+  
+}
+
+body {
+    background-color:black;
+    margin: 0;
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: black;
+}
+
+.navbar li {
+    float:right;
+}
+
+.navbar a, form {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navbar a:hover {
+    background-color: rgb(32, 32, 32);
+}
+
+.navbar .searchbar{
+    float: left;
+    font-size: large;
+}

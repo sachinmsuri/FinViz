@@ -1,0 +1,9 @@
+django
+django_plotly_dash
+channels
+channels_redis
+pandas
+requests
+dash
+dash_bootstrap_components
+SQLAlchemy

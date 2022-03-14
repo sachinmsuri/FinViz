@@ -1,0 +1,32 @@
+<!doctype html>
+{% load static %}
+<link rel='stylesheet' href="{% static '/css/style.css' %}">
+<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+<html lang='en'>
+<head>
+    <title>FinViz</title>
+</head>
+    <body>
+        <div class='navbar'>
+            <ul>
+                <li><a href = {% url 'search_stock' %}>The Market</a></li>
+                <li><a href = {% url 'portfolios' %}>Portfolios</a></li>
+                <li><a href = {% url 'momentum' %}>Momentum Trading</a></li>
+                <li><a href = {% url 'search_stock' %}>Top Movers</a></li>
+                <li><a href = {% url 'search_stock' %}>Stock Forcasts</a></li></li>
+                <li class='searchbar'><a href = {% url 'search_stock' %}><b>FINVIZ Beta</b></a></li>
+                    <!--{% csrf_token %}
+                    <form action="{% url 'search_stock' %}" method="POST">
+                        <input type='search' name='search_stock' placeholder='Search Quote'>
+                        <button type='submit' >Search</button>
+                    </form> -->
+                </li>
+            </ul>
+        </div>
+
+            <br>
+            {% block content%}
+
+            {% endblock %}
+    </body>
+</html>
