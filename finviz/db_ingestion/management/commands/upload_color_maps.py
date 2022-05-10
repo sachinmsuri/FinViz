@@ -15,15 +15,29 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
+            #color_lst = ["#41bbc5", "#d10f55", "#66de78", "#d06440", "#a6c363", "#5756a0", "#c8b0d4", "#3e727b", "#f8ba7c", "#428621"]
+            color_lst = ['#636EFA', '#EF553B', '#00CC96', '#AB63FA', '#FFA15A', '#19D3F3', '#FF6692', '#B6E880', '#FF97FF', '#FECB52']
+            color_1 = "636EFA"
+            color_2 = "EF553B"
+            color_3 = "00CC96"
+            color_4 = "AB63FA"
+            color_5 = "FFA15A"
+            color_6 = "19D3F3"
+            color_7 = "FF6692"
+            color_8 = "B6E880"
+            color_9 = "FF97FF"
+            color_10 = "FECB52"
+
+
             #UPLOAD MARKET CAP COLOR MAP DATA
-            marketcap_data = [['$0 - $250Million', 'ffadad'], 
-                            ['$250Million - $500Million', 'ffd6a5'], 
-                            ['$500Million - $1Billion', 'fdffb6'],
-                            ['$1Billion - $10Billion', 'caffbf'],
-                            ['$10Billion - $50Billion', '9bf6ff'],
-                            ['$50Billion - $100Billion', 'a0c4ff'],
-                            ['$100Billion - $500Billion', 'bdb2ff'],
-                            ['Greater than $500Billion', 'ffc6ff']]
+            marketcap_data = [['$0 - $250Million', color_1], 
+                            ['$250Million - $500Million', color_2], 
+                            ['$500Million - $1Billion', color_3],
+                            ['$1Billion - $10Billion', color_4],
+                            ['$10Billion - $50Billion', color_5],
+                            ['$50Billion - $100Billion', color_6],
+                            ['$100Billion - $500Billion', color_7],
+                            ['Greater than $500Billion', color_8]]
 
             marketcap_df = pd.DataFrame(marketcap_data, columns = ['Metric', 'Color'])
             print(marketcap_df)
@@ -33,15 +47,15 @@ class Command(BaseCommand):
 
             
             #UPLOAD DIVIDEND COLOR MAP DATA
-            dividend_data = [['0%', 'ffadad'], 
-                            ['0% - 1%', 'ffd6a5'], 
-                            ['1% - 2.5%', 'fdffb6'],
-                            ['2.5% - 5%', 'caffbf'],
-                            ['5% - 7.5%', '9bf6ff'],
-                            ['7.5% - 10%', 'a0c4ff'],
-                            ['10% - 15%', 'bdb2ff'],
-                            ['15% - 20%', 'ffc6ff'],
-                            ['Greater than 20%', 'fffffc']]
+            dividend_data = [['0%', color_1], 
+                            ['0% - 1%', color_2], 
+                            ['1% - 2.5%', color_3],
+                            ['2.5% - 5%', color_4],
+                            ['5% - 7.5%', color_5],
+                            ['7.5% - 10%', color_6],
+                            ['10% - 15%', color_7],
+                            ['15% - 20%', color_8],
+                            ['Greater than 20%', color_9]]
 
             dividend_df = pd.DataFrame(dividend_data, columns = ['Metric', 'Color'])
             print(dividend_df)
@@ -63,16 +77,16 @@ class Command(BaseCommand):
 
             
             #UPLOAD PE RATIO COLOR MAP DATA
-            peratio_data = [['Less than -10', 'ffadad'], 
-                            ['-10 - 0', 'ffd6a5'], 
-                            ['0 - 10', 'fdffb6'],
-                            ['10 - 20', 'caffbf'],
-                            ['20 - 30', '9bf6ff'],
-                            ['30 - 40', 'a0c4ff'],
-                            ['40 - 50', 'bdb2ff'],
-                            ['50 - 75', 'ffc6ff'],
-                            ['75 - 100', 'fffffc'],
-                            ['Greater than 100', 'fffffc']]
+            peratio_data = [['Less than -10', color_1], 
+                            ['-10 - 0', color_2], 
+                            ['0 - 10', color_3],
+                            ['10 - 20', color_4],
+                            ['20 - 30', color_5],
+                            ['30 - 40', color_6],
+                            ['40 - 50', color_7],
+                            ['50 - 75', color_8],
+                            ['75 - 100', color_9],
+                            ['Greater than 100', color_10]]
 
             peratio_df = pd.DataFrame(peratio_data, columns = ['Metric', 'Color'])
             print(peratio_df)
@@ -94,13 +108,13 @@ class Command(BaseCommand):
             # df.loc[(df['PE Ratio'] >= 100), 'PE Ratio Ranges'] = 'Greater than 100'
             
             #UPLOAD REVENUE COLOR MAP DATA
-            revenue_data = [['$0 - $250Million', 'ffadad'], 
-                            ['$250Million - $500Million', 'ffd6a5'], 
-                            ['$500Million- $1Billion', 'fdffb6'],
-                            ['$1Billion - $10Billion', 'caffbf'],
-                            ['$10Billion - $50Billion', '9bf6ff'],
-                            ['$50Billion - $100Billion', 'a0c4ff'],
-                            ['Greater than $100Billion', 'bdb2ff']]
+            revenue_data = [['$0 - $250Million', color_1], 
+                            ['$250Million - $500Million', color_2], 
+                            ['$500Million- $1Billion', color_3],
+                            ['$1Billion - $10Billion', color_4],
+                            ['$10Billion - $50Billion', color_5],
+                            ['$50Billion - $100Billion', color_6],
+                            ['Greater than $100Billion', color_7]]
 
             revenue_df = pd.DataFrame(revenue_data, columns = ['Metric', 'Color'])
             print(revenue_df)
@@ -119,14 +133,14 @@ class Command(BaseCommand):
             # df.loc[(df['Revenue'] >= 100000000000), 'Revenue Ranges'] = 'Greater than $100Billion'
 
             #UPLOAD EBIDTA COLOR MAP DATA
-            ebitda_data = [['Less than -$100Million', 'ffadad'], 
-                            ['-$100Million- -$50Million', 'ffd6a5'], 
-                            ['-$50Million - $0', 'fdffb6'],
-                            ['$0 - $250Million', 'caffbf'],
-                            ['$250Million - $500Million', '9bf6ff'],
-                            ['$500Million - $1Billion', 'a0c4ff'],
-                            ['$1Billion - $10Billion', 'bdb2ff'],
-                            ['Greater than $10Billion', 'ffc6ff']]
+            ebitda_data = [['Less than -$100Million', color_1], 
+                            ['-$100Million- -$50Million', color_2], 
+                            ['-$50Million - $0', color_3],
+                            ['$0 - $250Million', color_4],
+                            ['$250Million - $500Million', color_5],
+                            ['$500Million - $1Billion', color_6],
+                            ['$1Billion - $10Billion', color_7],
+                            ['Greater than $10Billion', color_8]]
 
             ebidta_df = pd.DataFrame(ebitda_data, columns = ['Metric', 'Color'])
             print(ebidta_df)

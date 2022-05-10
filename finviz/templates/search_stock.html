@@ -1,8 +1,119 @@
 {% extends 'base.html' %}
 {% block content %}
+
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+  
+  }
+  
+  td, th {
+    border: 0.5px solid white;
+    text-align: left;
+    padding: 4px;
+    color:white;
+  }
+</style>
+
     {% load plotly_dash %}
     <div class="{% plotly_class name='searchstocks' %} card" style="height:100%; width: 100%">
     {% plotly_app name='searchstocks' ratio=0.75 %}
     </div>
+
+    <table>
+        <tr>
+          <th>Market Capitalisation</th>
+          <th>Dividend Yield</th>
+          <th>P/E Ratio</th>
+          <th>Revenue</th>
+          <th>EBITDA</th>
+          <th>Color</th>
+        </tr>
+        <tr>
+          <td>$0 - $250Million</td>
+          <td>0%</td>
+          <td>Less than -10</td>
+          <td>$0 - $250Million</td>
+          <td>Less than -$100Million</td>
+          <td style="background-color:#636EFA;"></td>
+        </tr>
+        <tr>
+          <td>'$250Million - $500Million'</td>
+          <td>0% - 1%</td>
+          <td>-10 - 0</td>
+          <td>$250Million - $500Million</td>
+          <td>-$100Million- -$50Million</td>
+          <td style="background-color:#EF553B;"></td>
+        </tr>
+        <tr>
+          <td>$500Million - $1Billion</td>
+          <td>1% - 2.5%</td>
+          <td>0 - 10</td>
+          <td>$500Million- $1Billion</td>
+          <td>-$50Million - $0</td>
+          <td style="background-color:#00CC96;"></td>
+        </tr>
+        <tr>
+          <td>$1Billion - $10Billion</td>
+          <td>2.5% - 5%</td>
+          <td>10 - 20</td>
+          <td>$1Billion - $10Billion</td>
+          <td>$0 - $250Million</td>
+          <td style="background-color:#AB63FA;"></td>
+        </tr>
+        <tr>
+          <td>$10Billion - $50Billion</td>
+          <td>5% - 7.5%</td>
+          <td>20 - 30</td>
+          <td>$10Billion - $50Billion</td>
+          <td>$250Million - $500Million</td>
+          <td style="background-color:#FFA15A;"></td>
+        </tr>
+        <tr>
+          <td>$50Billion - $100Billion</td>
+          <td>7.5% - 10%</td>
+          <td>30 - 40</td>
+          <td>$50Billion - $100Billion</td>
+          <td>$500Million - $1Billion</td>
+             <td style="background-color:#19D3F3;"></td>
+        </tr>
+        <tr>
+          <td>$100Billion - $500Billion</td>
+          <td>10% - 15%</td>
+          <td>40 - 50</td>
+          <td>Greater than $100Billion</td>
+          <td>$1Billion - $10Billion</td>
+          <td style="background-color:#FF6692;"></td>
+        </tr>
+        <tr>
+          <td>Greater than $500Billion</td>
+          <td>15% - 20%</td>
+          <td>50 - 75</td>
+          <td></td>
+          <td>Greater than $10Billion</td>
+          <td style="background-color:#B6E880;"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Greater than 20%</td>
+          <td>75 - 100</td>
+          <td></td>
+          <td></td>
+          <td style="background-color:#FF97FF;"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td>Greater than 100</td>
+          <td></td>
+          <td></td>
+          <td style="background-color:#FECB52;"></td>
+        </tr>
+    
+      </table>
 
 {% endblock %}
