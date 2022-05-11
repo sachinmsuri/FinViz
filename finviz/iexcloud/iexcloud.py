@@ -1,8 +1,7 @@
 import json 
 import requests
 import pandas as pd
-from datetime import timedelta
-
+from datetime import datetime, timedelta
 
 class iexCloud():
     def __init__(self):
@@ -86,7 +85,6 @@ class iexCloud():
 
         return time_series_df
 
-
     def get_financials(self, ticker):
         #/stock/{symbol}/stats/
         r = self.get_request(f'/stable/stock/{ticker}/financials')
@@ -120,6 +118,25 @@ class iexCloud():
 
         return data_dict
 
+    def get_news(self, ticker):
+        news = self.get_request(f'/stable/stock/{ticker}/news/last/100')
+
+        data = []
+        for article in news:
+            unix_time = article['datetime']
+            updated_datetime = (datetime.fromtimestamp(unix_time/1000)).strftime('%Y-%m-%d %H:%M:%S')
+
+            row = {
+                #'date': article['datetime'],
+                'date': updated_datetime,
+                'headline': article['headline'],
+                'url': article['url']
+            }
+            data.append(row)
+        
+        df = pd.DataFrame(data=data)
+
+        return df
 
 
 if __name__ == "__main__":

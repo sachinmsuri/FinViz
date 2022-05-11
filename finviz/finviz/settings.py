@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'db_ingestion',
     'portfolios',
     'momentum',
+    'forecasting'
 ]
 
 MIDDLEWARE = [
