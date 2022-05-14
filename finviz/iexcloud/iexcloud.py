@@ -1,8 +1,7 @@
 import json 
 import requests
 import pandas as pd
-from datetime import timedelta
-
+from datetime import datetime, timedelta
 
 class iexCloud():
     def __init__(self):
@@ -30,16 +29,19 @@ class iexCloud():
         return r
 
     def get_max_time_series_df(self, ticker):
-        #r = self.get_request(f'/stable/stock/{ticker}/chart/max')
-        r = self.get_request(f'/stable/stock/{ticker}/chart/5y')
-        data_lst = []
+        try:
+            #r = self.get_request(f'/stable/stock/{ticker}/chart/max')
+            r = self.get_request(f'/stable/stock/{ticker}/chart/5y')
+            data_lst = []
 
-        for i in r:
-            data_lst.append([i['date'], i['close']])
+            for i in r:
+                data_lst.append([i['date'], i['close']])
 
-        df = pd.DataFrame(data_lst, columns=['Date', ticker])
-        print(f"Fetching time series data for {ticker}")
-        return df
+            df = pd.DataFrame(data_lst, columns=['Date', ticker])
+            print(f"Fetching time series data for {ticker}")
+            return df
+        except Exception as e:
+            print(str(e))
 
     def get_quote(self, ticker):
         r = self.get_request(f'/stable/stock/{ticker}/quote')
@@ -86,7 +88,6 @@ class iexCloud():
 
         return time_series_df
 
-
     def get_financials(self, ticker):
         #/stock/{symbol}/stats/
         r = self.get_request(f'/stable/stock/{ticker}/financials')
@@ -120,6 +121,25 @@ class iexCloud():
 
         return data_dict
 
+    def get_news(self, ticker):
+        news = self.get_request(f'/stable/stock/{ticker}/news/last/100')
+
+        data = []
+        for article in news:
+            unix_time = article['datetime']
+            updated_datetime = (datetime.fromtimestamp(unix_time/1000)).strftime('%Y-%m-%d %H:%M:%S')
+
+            row = {
+                #'date': article['datetime'],
+                'date': updated_datetime,
+                'headline': article['headline'],
+                'url': article['url']
+            }
+            data.append(row)
+        
+        df = pd.DataFrame(data=data)
+
+        return df
 
 
 if __name__ == "__main__":
