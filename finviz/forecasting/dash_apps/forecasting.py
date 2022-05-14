@@ -5,6 +5,7 @@ import pandas as pd
 import dash
 from dash import dcc
 from dash import html
+from dash import dash_table
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input
 from dash.dependencies import Output
@@ -12,6 +13,7 @@ import plotly.express as px
 import plotly.graph_objs as go
 from django_plotly_dash import DjangoDash
 from plotly.subplots import make_subplots
+from forecasting.views import forecast_stock
 from forecasting.views import predict_sentiment
 
 
@@ -44,11 +46,20 @@ app.layout = html.Div([
                 options=get_symbols(),
                 value = [],
                 placeholder="Companies listed on Nasdaq",
-                style={'backgroundColor': '#1E1E1E'}),
+                style={'backgroundColor': '#1E1E1E', 'color': 'white'}),
     
     html.Br(),
-    
+        
+    html.Div(id="sentiment-score", style={'color': 'white', 'textAlign': 'center'}),
+
+    html.Br(),
+
     dcc.Graph(id="forecasting-chart", config={'displayModeBar': False}),
+
+    html.Br(),
+
+    html.Div(id="news-articles"),
+
     
 ])
 
@@ -57,9 +68,106 @@ app.layout = html.Div([
     Output("forecasting-chart", "figure"), 
     [Input("stockselector", "value")])
 
-def time_series_stock(ticker_dropdown):
-    print(predict_sentiment(ticker_dropdown))
+def time_series_stock(ticker):
+    graphs = []
 
-    #Flatten list
-    #if any(isinstance(i, list) for i in ticker_dropdown):
-    #    ticker_dropdown = [item for elem in ticker_dropdown for item in elem]
+    if ticker:
+        forecasted_df = forecast_stock(ticker)
+        forecasted_df = forecasted_df.rename(columns={'ds': 'Date', 'trend':ticker})
+        print(forecasted_df)
+
+        graphs.append(go.Scatter(
+            x = forecasted_df['Date'],
+            y = forecasted_df[ticker],
+            mode = 'lines',
+            name = f"{ticker} Forecasted" ,
+            textposition = 'bottom center',
+        ))
+
+        #if any(isinstance(i, list) for i in graphs):
+        #    graphs = [item for elem in graphs for item in elem]
+
+
+    fig = {
+            'data': graphs,
+            'layout': go.Layout(
+            paper_bgcolor='rgba(30, 30, 30, 30)',
+            plot_bgcolor='rgba(30, 30, 30, 30)',
+            autosize=True,
+            xaxis = {'showgrid':True, 
+                'gridwidth':1, 
+                'gridcolor':'Grey',
+                'color': 'White',
+                'rangeselector': {
+                    'buttons':list([
+                            dict(count=1, label="1m", step="month", stepmode="backward"),
+                            dict(count=6, label="6m", step="month", stepmode="backward"),
+                            dict(count=1, label="YTD", step="year", stepmode="todate"),
+                            dict(count=1, label="1y", step="year", stepmode="backward"),
+                            dict(count=5, label="5y", step="year", stepmode="backward"),
+                            dict(step="all")
+                            ])
+                        }
+                    },
+            yaxis = {'showgrid':True, 
+                'gridwidth':1, 
+                'gridcolor':'Grey',
+                'color': 'White',
+                    },
+            yaxis2 = {'showgrid':False, 
+                'gridwidth':1, 
+                'gridcolor':'Grey',
+                'color': 'White',
+                'overlaying': 'y',
+                'side': 'right'
+                    },
+            legend=dict(
+                font=dict(
+                    color="white"
+                    ),
+                )
+            )
+        }
+
+    return fig
+
+@app.callback(
+    Output("news-articles", "children"), 
+    [Input("stockselector", "value")])
+
+def news_articles(ticker):
+
+    news_df = obj_iexcloud.get_news(ticker)
+
+    return dash_table.DataTable(
+        style_data={
+        'whiteSpace': 'normal',
+        'height': 'auto',
+        },
+        style_header={
+        'backgroundColor': 'black',
+        'color': 'white',
+        'textAlign': 'center'
+        },
+        style_cell={
+        'backgroundColor': 'black',
+        'color': 'white',
+        'textAlign': 'left'
+        },
+        data=news_df.to_dict('records'),
+        columns=[{'id': c, 'name': c} for c in news_df.columns],
+        #columns=[{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'url' else {'id': x, 'name': x} for x in news_df.columns],
+    )
+
+
+
+@app.callback(
+    Output("sentiment-score", "children"), 
+    [Input("stockselector", "value")])
+
+def sentiment_score(ticker):
+    if ticker:
+        sentiment_score = predict_sentiment(ticker)
+        string = f'{ticker} Sentiment Score: {sentiment_score}'
+
+    return string

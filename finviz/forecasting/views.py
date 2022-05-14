@@ -11,8 +11,9 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
 from sklearn.svm import LinearSVC
 from prophet import Prophet
-
 from django.shortcuts import render
+from datetime import date
+import datetime
 
 nltk.download('stopwords')
 from nltk.corpus import stopwords
@@ -67,8 +68,6 @@ def fit_model(data):
     df = pd.read_csv(data, encoding='ISO-8859-1', names=['sentiment', 'sentence'])
 
     df = clean_data(df, True)
-    print(df)
-
     tfidf = TfidfVectorizer(max_features = 5000)
 
     x = df['sentence']
@@ -123,6 +122,44 @@ def predict_sentiment(ticker):
     )
 
     return weighted_average
+
+def forecast_stock(ticker):
+    iex = iexCloud()
+    ticker_data = iex.get_max_time_series_df(ticker)
+
+    weight = predict_sentiment(ticker)
+
+    ticker_data = ticker_data.rename(columns = {
+        'Date': 'ds',
+        ticker: 'y'
+    })
+
+    model_params = {
+    "daily_seasonality": False,
+    "weekly_seasonality": False,
+    "yearly_seasonality": True,
+    "seasonality_mode": "multiplicative",
+    "growth": "logistic"
+    }
+
+    model = Prophet(**model_params)
+    ticker_data["cap"] = ticker_data['y'].max() + ticker_data['y'].std() * 0.05
+
+    model.fit(ticker_data)
+
+    future = model.make_future_dataframe(periods=100)
+    future["cap"] = ticker_data["cap"].max()
+
+    forecast = model.predict(future)
+    
+    #Apply weightings
+    forecast['ds'] = pd.to_datetime(forecast['ds'])
+    condition = forecast['ds'] >= datetime.datetime.now()
+    forecast.loc[condition, 'trend'] = weight * forecast.loc[condition, 'trend']
+
+    return forecast
+
+
 
 
 
