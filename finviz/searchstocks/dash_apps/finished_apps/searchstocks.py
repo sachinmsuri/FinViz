@@ -446,7 +446,6 @@ def value_finder(ticker_dropdown, sector_dropdown):
     fig = px.bar(value_finder_df, x="Symbol", y="value", 
                 color="Symbol")
 
-
     if sector_dropdown:
         if any(isinstance(i, list) for i in sector_dropdown):
             sector_dropdown = [item for elem in sector_dropdown for item in elem]
