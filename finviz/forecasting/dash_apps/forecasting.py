@@ -64,6 +64,8 @@ app.layout = html.Div([
 ])
 
 #Callbacks
+
+    
 @app.callback(
     Output("forecasting-chart", "figure"), 
     [Input("stockselector", "value")])

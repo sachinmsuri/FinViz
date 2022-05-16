@@ -15,8 +15,11 @@ class iexCloud():
         except Exception as e:
             print(str(e))
 
-    def get_request(self, path):
-        url = f'{self.base_url}{path}?token={self.token}'
+    def get_request(self, path, advanced=None):
+        if advanced:
+            url = f'{self.base_url}{path}&token={self.token}'
+        else:
+            url = f'{self.base_url}{path}?token={self.token}'
         r = requests.get(url)
         if r.status_code == 200:
             return r.json()
@@ -138,6 +141,102 @@ class iexCloud():
             data.append(row)
         
         df = pd.DataFrame(data=data)
+
+        return df
+
+    def get_income_statement(self, ticker):
+        years = [
+            2017,
+            2018,
+            2019,
+            2020,
+            2021
+        ]
+
+        dataframe_rows = {
+                'Indicator': ['Revenue', 'Cost of Revenue', 'Gross Profit', 'Earnings before Interest & Tax', 'R&D']
+            }
+
+        for year in years:
+            financials = self.get_request(f'/stable/stock/{ticker}/income?period=annual&limit=1&subattribute=fiscalYear|{year}', True)
+
+            data = [
+                financials['income'][0]['totalRevenue'],
+                financials['income'][0]['costOfRevenue'],
+                financials['income'][0]['grossProfit'],
+                financials['income'][0]['ebit'],
+                financials['income'][0]['researchAndDevelopment'],
+            ]
+
+            dataframe_rows[year] = data
+
+        df = pd.DataFrame(data=dataframe_rows)
+
+        return df
+
+        
+    
+    def get_balance_sheet(self, ticker):
+        years = [
+            2017,
+            2018,
+            2019,
+            2020,
+            2021
+        ]
+
+        dataframe_rows = {
+                'Indicator': ['Assets', 'Cash', 'Retained Earnings', 'Inventory', 'Debt']
+            }
+
+        for year in years:
+            financials = self.get_request(f'/stable/stock/{ticker}/balance-sheet?period=annual&limit=1&subattribute=fiscalYear|{year}', True)
+
+            data = [
+                financials['balancesheet'][0]['totalAssets'],
+                financials['balancesheet'][0]['currentCash'],
+                financials['balancesheet'][0]['retainedEarnings'],
+                financials['balancesheet'][0]['inventory'],
+                financials['balancesheet'][0]['longTermDebt'],
+            ]
+
+            dataframe_rows[year] = data
+
+        df = pd.DataFrame(data=dataframe_rows)
+
+        return df
+
+
+    def get_financial_ratios(self, ticker):
+        years = [
+            2017,
+            2018,
+            2019,
+            2020,
+            2021
+        ]
+
+        dataframe_rows = {
+                'Indicator': ['Current Ratio', 'Debt to Assets', 'P/E Ratio', 'Return on Assets', 'Earnings Yield (EPS)']
+            }
+        
+        for year in years:
+            ratios = self.get_request(f'/stable/time-series/FUNDAMENTAL_VALUATIONS/{ticker}/annual?limit=1&subattribute=fiscalYear|{year}', True)
+
+            data = [
+                    ratios[0]['currentRatio'],
+                    ratios[0]['debtToAssets'],
+                    ratios[0]['pToE'],
+                    ratios[0]['returnOnAssets'],
+                    ratios[0]['earningsYield']
+                ]
+
+            dataframe_rows[year] = data
+
+        df = pd.DataFrame(data=dataframe_rows)
+
+        for year in years:
+            df[year] = df[year].apply(lambda x: float("{:.3f}".format(x)))
 
         return df
 
