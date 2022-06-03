@@ -119,7 +119,7 @@ app.layout = html.Div([
                 multi=True,
                 value = [],
                 clearable = True,
-                placeholder="Companies listed on Nasdaq",
+                placeholder="Companies listed on S&P500",
                 style={'backgroundColor': '#1E1E1E'}),
     
     dcc.Dropdown(id='sectorselector',
@@ -127,7 +127,7 @@ app.layout = html.Div([
                 multi=True,
                 clearable = True,
                 value = [],
-                placeholder="Sectors listed on Nasdaq",
+                placeholder="Sectors listed on S&P500",
                 style={'backgroundColor': '#1E1E1E'}),
     
     html.Br(),
@@ -321,10 +321,11 @@ def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_dropdown,
     sector_df = read_ticker_symbols()
     sector_df = sector_df[sector_df['Sector'].isin(sector_dropdown)]
     print(sector_df)
-    #if marketcap_dropdown:
+
     for key in  filled_parameters:
-        #sector_df = sector_df.loc[(sector_df['Market Capitalization Ranges'].isin(marketcap_dropdown))]
         sector_df = sector_df.loc[(sector_df[key].isin(filled_parameters[key]))]
+    
+    
     stock_list = list(sector_df['Symbol'])[0:20]
     for stock in stock_list:
         if momentum_selector == 'Momentum':

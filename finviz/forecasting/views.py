@@ -157,7 +157,11 @@ def forecast_stock(ticker):
     condition = forecast['ds'] >= datetime.datetime.now()
     forecast.loc[condition, 'trend'] = weight * forecast.loc[condition, 'trend']
 
-    return forecast
+    historical_df = forecast[forecast['ds'] <= datetime.datetime.now()]
+    forecasted_df = forecast[forecast['ds'] > datetime.datetime.now()]
+
+    #return forecast
+    return [historical_df, forecasted_df]
 
 
 

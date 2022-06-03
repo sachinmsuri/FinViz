@@ -160,7 +160,7 @@ app.layout = html.Div([
                 multi=True,
                 value = [],
                 clearable = True,
-                placeholder="Companies listed on Nasdaq",
+                placeholder="Companies listed on S&P500",
                 style={'backgroundColor': '#1E1E1E'}),
     
     dcc.Dropdown(id='sectorselector',
@@ -168,7 +168,7 @@ app.layout = html.Div([
                 multi=True,
                 clearable = True,
                 value = [],
-                placeholder="Sectors listed on Nasdaq",
+                placeholder="Sectors listed on S&P500",
                 style={'backgroundColor': '#1E1E1E'}),
     
     html.Br(),
@@ -455,6 +455,8 @@ def value_finder(ticker_dropdown, sector_dropdown):
                                     value_finder_df['200 Day MA']) / value_finder_df['Share Price']) * 100
         
         value_finder_df = value_finder_df[value_finder_df['Sector'].isin(sector_dropdown)]
+
+        
         #df_metrics = get_company_stats()
 
         #value_finder_df = pd.merge(value_finder_df, df_metrics[['Symbol', 'PE Ratio Ranges']], how='left', on='Symbol')
@@ -462,7 +464,25 @@ def value_finder(ticker_dropdown, sector_dropdown):
         fig = px.bar(value_finder_df, 
                     x="Symbol", 
                     y="value", 
-                    color="PE Ratio Ranges",
+                    #color="PE Ratio Ranges",
+                    color="Symbol",
+
+                    )
+    
+    if not sector_dropdown and not ticker_dropdown:
+        value_finder_df = read_ticker_symbols()
+        value_finder_df['value'] = ((value_finder_df['Share Price'] -
+                                    value_finder_df['200 Day MA']) / value_finder_df['Share Price']) * 100
+
+        value_finder_df = value_finder_df.sort_values(by=['value'])
+        value_finder_df = value_finder_df.head(15)
+
+        fig = px.bar(value_finder_df, 
+                    x="Symbol", 
+                    y="value", 
+                    #color="PE Ratio Ranges",
+                    color="Sector",
+
                     )
 
         

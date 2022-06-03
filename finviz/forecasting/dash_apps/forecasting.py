@@ -45,12 +45,20 @@ app.layout = html.Div([
     dcc.Dropdown(id='stockselector',
                 options=get_symbols(),
                 value = [],
-                placeholder="Companies listed on Nasdaq",
-                style={'backgroundColor': '#1E1E1E', 'color': 'white'}),
+                placeholder="Companies listed on S&P500",
+                style={'backgroundColor': '#1E1E1E', 'color': 'black'}),
     
     html.Br(),
         
     html.Div(id="sentiment-score", style={'color': 'white', 'textAlign': 'center'}),
+
+    html.Div([
+            html.Div(id="sentiment-score"),
+            html.Br(),
+            html.Div('0:Negative | 1: Neutral | 2: Positive'),  
+            ], style={'display': 'flex', 'align-items': 'center', 'justify-content': 'space-between',
+                        'color':'white'}
+        ),
 
     html.Br(),
 
@@ -74,17 +82,25 @@ def time_series_stock(ticker):
     graphs = []
 
     if ticker:
+        count = 0
         forecasted_df = forecast_stock(ticker)
-        forecasted_df = forecasted_df.rename(columns={'ds': 'Date', 'trend':ticker})
-        print(forecasted_df)
+        for df in forecasted_df:
+            forecasted_df = df.rename(columns={'ds': 'Date', 'trend':ticker})
 
-        graphs.append(go.Scatter(
-            x = forecasted_df['Date'],
-            y = forecasted_df[ticker],
-            mode = 'lines',
-            name = f"{ticker} Forecasted" ,
-            textposition = 'bottom center',
-        ))
+            count += 1
+            if count > 1:
+                name = f"{ticker} Forecasted"
+            else:
+                name = f"{ticker}"
+
+            graphs.append(go.Scatter(
+                x = forecasted_df['Date'],
+                y = forecasted_df[ticker],
+                mode = 'lines',
+                #name = f"{ticker} Forecasted" ,
+                name = name,
+                textposition = 'bottom center',
+            ))
 
         #if any(isinstance(i, list) for i in graphs):
         #    graphs = [item for elem in graphs for item in elem]
