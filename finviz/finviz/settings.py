@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'portfolios',
     'momentum',
     'forecasting',
-    'annualreports'
+    'annualreports',
+    'companystats'
 ]
 
 MIDDLEWARE = [

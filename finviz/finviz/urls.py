@@ -24,6 +24,7 @@ urlpatterns = [
     path('', include('momentum.urls')),
     path('', include('forecasting.urls')),
     path('', include('annualreports.urls')),
+    path('', include('companystats.urls')),
     path('django_plotly_dash/', include('django_plotly_dash.urls')),
 ]
 
