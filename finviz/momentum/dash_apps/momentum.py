@@ -326,7 +326,9 @@ def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_dropdown,
         sector_df = sector_df.loc[(sector_df[key].isin(filled_parameters[key]))]
     
     
-    stock_list = list(sector_df['Symbol'])[0:20]
+    #stock_list = list(sector_df['Symbol'])[0:20]
+
+    stock_list = list(sector_df['Symbol'])
     for stock in stock_list:
         if momentum_selector == 'Momentum':
             stock_df = obj_iexcloud.get_momentum_df(stock)

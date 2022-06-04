@@ -192,6 +192,20 @@ app.layout = html.Div([
 
     html.Br(),
 
+
+    html.Button('Update Graphh', 
+                n_clicks = 0,
+                id='button', 
+                style = {
+                'display':'flex', 
+                'justifyContent':'center',
+                'align-items':'center',
+                'margin': 'auto'
+                }
+    ),
+
+    html.Br(),
+
     dcc.Dropdown(id='marketcap_selector',
                 options=[
                     {'label': "0 - $250Millon", 'value': "0 - $250Million"},
@@ -301,7 +315,8 @@ app.layout = html.Div([
 #Callbacks
 @app.callback(
     Output("time-series-chart", "figure"), 
-    [Input("stockselector", "value"),
+    [Input("button", 'n_clicks'),
+    Input("stockselector", "value"),
     Input("sectorselector", "value"),
     Input("marketcap_selector", "value"),
     Input("dividend_selector", "value"),
@@ -311,75 +326,83 @@ app.layout = html.Div([
     Input("colormap", "value")]
     )
 
-def time_series_stock(ticker_dropdown, sector_dropdown, marketcap_selector, 
+def time_series_stock(n_clicks, ticker_dropdown, sector_dropdown, marketcap_selector, 
                         dividend_selector, pe_selector, revenue_selector,
                         ebitda_selector, colormap):
 
-    #Flatten list
-    if any(isinstance(i, list) for i in ticker_dropdown):
-        ticker_dropdown = [item for elem in ticker_dropdown for item in elem]
-
     graphs = []
 
-    #Draw time series of a single stock
-    for ticker in ticker_dropdown:
-        stock_df = obj_iexcloud.get_max_time_series_df(ticker)
-        graphs.append(go.Scatter(
-            x = stock_df['Date'],
-            y = stock_df[ticker],
-            mode = 'lines',
-            name = ticker,
-            textposition = 'bottom center',
-        ))
 
-    parameters = {
-        'Market Capitalization Ranges': marketcap_selector,
-        'Dividend Ranges': dividend_selector,
-        'PE Ratio Ranges': pe_selector,
-        'Revenue Ranges': revenue_selector,
-        'EBITDA Ranges': ebitda_selector
-    }
-    filled_parameters = {}
-    for key, value in parameters.items():
-        if value:
-            filled_parameters[key] = value
+    if n_clicks > 0:
 
-    #Draw time series of sectors and filter
-    sector_df = read_ticker_symbols()
-    sector_df = sector_df[sector_df['Sector'].isin(sector_dropdown)]
-    print(sector_df)
-    #if marketcap_dropdown:
-    for key in  filled_parameters:
-        #sector_df = sector_df.loc[(sector_df['Market Capitalization Ranges'].isin(marketcap_dropdown))]
-        sector_df = sector_df.loc[(sector_df[key].isin(filled_parameters[key]))]
-    stock_list = list(sector_df['Symbol'])
-    for stock in stock_list:
-        stock_df = obj_iexcloud.get_max_time_series_df(stock)
-        #Choose color based on metric
-        if colormap == 'none':
+
+        #Flatten list
+        if any(isinstance(i, list) for i in ticker_dropdown):
+            ticker_dropdown = [item for elem in ticker_dropdown for item in elem]
+
+        #graphs = []
+
+        #Draw time series of a single stock
+        for ticker in ticker_dropdown:
+            stock_df = obj_iexcloud.get_max_time_series_df(ticker)
             graphs.append(go.Scatter(
-            x = stock_df['Date'],
-            y = stock_df[stock],
-            mode = 'lines',
-            name = stock,
-            textposition = 'bottom center',
-            ))
-        else:
-            metric = colormap
-            range = stock_information(stock, metric)
-            color = colormap_value(metric, range)
-
-            graphs.append(go.Scatter(
-            x = stock_df['Date'],
-            y = stock_df[stock],
-            mode = 'lines',
-            name = stock,
-            textposition = 'bottom center',
-            line=dict(color=f'#{color}'),
+                x = stock_df['Date'],
+                y = stock_df[ticker],
+                mode = 'lines',
+                name = ticker,
+                textposition = 'bottom center',
             ))
 
-    if any(isinstance(i, list) for i in graphs):
-        graphs = [item for elem in graphs for item in elem]
+        parameters = {
+            'Market Capitalization Ranges': marketcap_selector,
+            'Dividend Ranges': dividend_selector,
+            'PE Ratio Ranges': pe_selector,
+            'Revenue Ranges': revenue_selector,
+            'EBITDA Ranges': ebitda_selector
+        }
+        filled_parameters = {}
+        for key, value in parameters.items():
+            if value:
+                filled_parameters[key] = value
+
+        #Draw time series of sectors and filter
+        sector_df = read_ticker_symbols()
+        sector_df = sector_df[sector_df['Sector'].isin(sector_dropdown)]
+        print(sector_df)
+        #if marketcap_dropdown:
+        for key in  filled_parameters:
+            #sector_df = sector_df.loc[(sector_df['Market Capitalization Ranges'].isin(marketcap_dropdown))]
+            sector_df = sector_df.loc[(sector_df[key].isin(filled_parameters[key]))]
+        stock_list = list(sector_df['Symbol'])
+        for stock in stock_list:
+            stock_df = obj_iexcloud.get_max_time_series_df(stock)
+            #Choose color based on metric
+            if colormap == 'none':
+                graphs.append(go.Scatter(
+                x = stock_df['Date'],
+                y = stock_df[stock],
+                mode = 'lines',
+                name = stock,
+                textposition = 'bottom center',
+                ))
+            else:
+                metric = colormap
+                range = stock_information(stock, metric)
+                color = colormap_value(metric, range)
+
+                graphs.append(go.Scatter(
+                x = stock_df['Date'],
+                y = stock_df[stock],
+                mode = 'lines',
+                name = stock,
+                textposition = 'bottom center',
+                line=dict(color=f'#{color}'),
+                ))
+
+        if any(isinstance(i, list) for i in graphs):
+            graphs = [item for elem in graphs for item in elem]
+        
+        n_clicks = 0
 
     fig = {
             'data': graphs,
@@ -482,7 +505,6 @@ def value_finder(ticker_dropdown, sector_dropdown):
                     y="value", 
                     #color="PE Ratio Ranges",
                     color="Sector",
-
                     )
 
         
