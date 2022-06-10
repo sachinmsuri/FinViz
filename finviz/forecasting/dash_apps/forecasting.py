@@ -15,6 +15,9 @@ from django_plotly_dash import DjangoDash
 from plotly.subplots import make_subplots
 from forecasting.views import forecast_stock
 from forecasting.views import predict_sentiment
+from forecasting.views import read_ticker_symbols
+from forecasting.views import get_symbols
+
 
 
 ##############################################################################################
@@ -22,23 +25,6 @@ from forecasting.views import predict_sentiment
 obj_iexcloud = iexCloud()
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = DjangoDash('forecasting', external_stylesheets=external_stylesheets)
-
-def read_ticker_symbols():
-    try:
-        df = pd.read_sql('SELECT * FROM db_ingestion_tickers;', engine_string)    
-        return df
-    except Exception as e:
-        print(str(e))
-
-def get_symbols():
-    dropdown_options = []
-    df = read_ticker_symbols()
-    for index, row in df.iterrows():
-        dropdown_options.append({'label': row['Name'], 'value': row['Symbol']})
-    return dropdown_options
-
-
-##############################################################################################
 
 #App layout
 app.layout = html.Div([

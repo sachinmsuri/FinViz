@@ -182,8 +182,6 @@ class iexCloud():
 
         return df
 
-        
-    
     def get_balance_sheet(self, ticker):
         years = [
             2017,
@@ -214,7 +212,6 @@ class iexCloud():
         df = pd.DataFrame(data=dataframe_rows)
 
         return df
-
 
     def get_financial_ratios(self, ticker):
         years = [

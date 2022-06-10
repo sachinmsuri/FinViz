@@ -14,6 +14,9 @@ import plotly.graph_objs as go
 from django_plotly_dash import DjangoDash
 from dash.exceptions import PreventUpdate
 from functools import reduce
+from portfolios.views import read_ticker_symbols
+from portfolios.views import get_symbols
+
 
 ##############################################################################################
 #Parameters and instantiating classes
@@ -21,23 +24,6 @@ obj_iexcloud = iexCloud()
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = DjangoDash('portfolios', external_stylesheets=external_stylesheets)
 
-def read_ticker_symbols():
-    try:
-        df_tickers = pd.read_sql('SELECT * FROM db_ingestion_tickers;', engine_string)
-        df_tickerstats = pd.read_sql('SELECT * FROM db_ingestion_tickerstats', engine_string)
-        df = pd.merge(df_tickers, df_tickerstats, how='inner', on='Symbol')
-
-        return df
-    except Exception as e:
-        print(str(e))
-
-def get_symbols():
-    dropdown_options = []
-    df = read_ticker_symbols()
-    for index, row in df.iterrows():
-        dropdown_options.append({'label': row['Name'], 'value': row['Symbol']})
-    return dropdown_options
-##############################################################################################
 
 #App layout
 app.layout = html.Div([

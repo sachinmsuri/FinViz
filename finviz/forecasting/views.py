@@ -14,6 +14,7 @@ from prophet import Prophet
 from django.shortcuts import render
 from datetime import date
 import datetime
+from parameters import engine_string
 
 nltk.download('stopwords')
 from nltk.corpus import stopwords
@@ -27,6 +28,20 @@ stemmer = SnowballStemmer("english")
 
 def forecasting(request):
     return render(request, 'forecasting.html', {})
+
+def read_ticker_symbols():
+    try:
+        df = pd.read_sql('SELECT * FROM db_ingestion_tickers;', engine_string)    
+        return df
+    except Exception as e:
+        print(str(e))
+
+def get_symbols():
+    dropdown_options = []
+    df = read_ticker_symbols()
+    for index, row in df.iterrows():
+        dropdown_options.append({'label': row['Name'], 'value': row['Symbol']})
+    return dropdown_options
 
 #Function to clean data before calculating sentiment score
 def clean_data(df, test):
