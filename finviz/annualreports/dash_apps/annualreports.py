@@ -29,7 +29,7 @@ app.layout = html.Div([
     dcc.Dropdown(id='stockselector',
                 options=get_symbols(),
                 value = [],
-                placeholder="Companies listed on Nasdaq",
+                placeholder="Companies listed on S&P500",
                 style={'backgroundColor': '#1E1E1E', 'color': 'black'}),
     
     html.Br(),

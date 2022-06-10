@@ -5,6 +5,7 @@ import pandas as pd
 from parameters import engine_string
 from iexcloud.iexcloud import iexCloud
 import random
+import time
 
 class Command(BaseCommand):
     help = "A command to add data from iexcloud api to database"
@@ -17,12 +18,19 @@ class Command(BaseCommand):
             tickers_df = pd.read_sql('SELECT Symbol FROM db_ingestion_tickers;', engine_string)
             tickers = tickers_df['Symbol'].to_list()
             #For testing
-            #tickers = random.choices(tickers, k=100)
+            #tickers = random.choices(tickers, k=10)
             #tickers.extend(['NVDA', 'MSFT', 'AAPL'])
             tickers = list(dict.fromkeys(tickers))
-            print(tickers)   
+            print(tickers)
+
+            count = 0
 
             for ticker in tickers:
+                count += 1
+                if count == 50:
+                    count = 0
+                    time.sleep(30)
+                    print('Pausing connnection ....')
                 print(f"Fetching data for {ticker}")
                 financials = obj.get_financials(ticker)
                 stats = obj.get_stats(ticker)
@@ -33,6 +41,9 @@ class Command(BaseCommand):
 
             stats_df = pd.DataFrame(stats_df_rows)
             financials_df = pd.DataFrame(financials_df_rows)
+
+            print(stats_df)
+            print(financials_df)
 
             df = pd.merge(stats_df, financials_df, how='inner', on='Symbol')
             df = df.drop_duplicates()

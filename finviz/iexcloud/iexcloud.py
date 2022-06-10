@@ -26,11 +26,6 @@ class iexCloud():
         else:
             print(f"connection to api failed ... error code - {r.status_code}")
 
-    def get_max_time_series(self, ticker):
-        #r = self.get_request(f'/stable/stock/{ticker}/chart/max')
-        r = self.get_request(f'/stable/stock/{ticker}/chart/1y')
-        return r
-
     def get_max_time_series_df(self, ticker):
         try:
             #r = self.get_request(f'/stable/stock/{ticker}/chart/max')
@@ -45,6 +40,11 @@ class iexCloud():
             return df
         except Exception as e:
             print(str(e))
+
+    def get_max_time_series(self, ticker):
+        #r = self.get_request(f'/stable/stock/{ticker}/chart/max')
+        r = self.get_request(f'/stable/stock/{ticker}/chart/1y')
+        return r
 
     def get_quote(self, ticker):
         r = self.get_request(f'/stable/stock/{ticker}/quote')
@@ -66,7 +66,9 @@ class iexCloud():
             if i == (time_period-1):
                 break
             else:
-                time_series_df.iloc[i, time_series_df.columns.get_loc('Momentum')] = ((time_series_df.iloc[i, time_series_df.columns.get_loc(ticker)] - time_series_df.iloc[i - (time_period), time_series_df.columns.get_loc(ticker)]) / time_period)
+                time_series_df.iloc[i, time_series_df.columns.get_loc('Momentum')] =\
+                ((time_series_df.iloc[i, time_series_df.columns.get_loc(ticker)] -\
+                time_series_df.iloc[i - (time_period), time_series_df.columns.get_loc(ticker)]) / time_period)
         
         time_series_df = time_series_df[time_series_df['Momentum'] != placeholder]
         time_series_df['Momentum'] = time_series_df['Momentum'].astype(float)
@@ -75,7 +77,9 @@ class iexCloud():
         time_series_df['Momentum Change'] = placeholder
 
         for i in range(dataframe_length, 0, -1):
-            time_series_df.iloc[(i), time_series_df.columns.get_loc('Momentum Change')] = ((time_series_df.iloc[i, time_series_df.columns.get_loc('Momentum')] - time_series_df.iloc[(i-1), time_series_df.columns.get_loc('Momentum')]))
+            time_series_df.iloc[(i), time_series_df.columns.get_loc('Momentum Change')] =\
+            ((time_series_df.iloc[i, time_series_df.columns.get_loc('Momentum')] -\
+            time_series_df.iloc[(i-1), time_series_df.columns.get_loc('Momentum')]))
         
         time_series_df = time_series_df[time_series_df['Momentum Change'] != placeholder]
         time_series_df['Momentum Change'] = time_series_df['Momentum Change'].astype(float)
@@ -109,7 +113,9 @@ class iexCloud():
 
     def get_stats(self, ticker):
         stats = self.get_request(f'/stable/stock/{ticker}/stats')
-        latest_share_price = self.get_request(f'/stable/stock/{ticker}/delayed-quote')
+        #latest_share_price = self.get_request(f'/stable/stock/{ticker}/delayed-quote')
+        latest_share_price = self.get_request(f'/stable/stock/{ticker}/previous')
+
         if not stats or not latest_share_price:
             return
         else:
@@ -119,7 +125,9 @@ class iexCloud():
                 'Dividend': stats['dividendYield'],
                 'PE Ratio': stats['peRatio'],
                 '200 Day MA': stats['day200MovingAvg'],
-                'Share Price': latest_share_price['delayedPrice']
+                #'Share Price': latest_share_price['delayedPrice']
+                'Share Price': latest_share_price['close']
+
             }
 
         return data_dict
@@ -174,8 +182,6 @@ class iexCloud():
 
         return df
 
-        
-    
     def get_balance_sheet(self, ticker):
         years = [
             2017,
@@ -186,7 +192,8 @@ class iexCloud():
         ]
 
         dataframe_rows = {
-                'Indicator': ['Assets', 'Cash', 'Retained Earnings', 'Inventory', 'Debt']
+                'Indicator': ['Assets', 'Cash', 
+                'Retained Earnings', 'Inventory', 'Debt']
             }
 
         for year in years:
@@ -205,7 +212,6 @@ class iexCloud():
         df = pd.DataFrame(data=dataframe_rows)
 
         return df
-
 
     def get_financial_ratios(self, ticker):
         years = [
